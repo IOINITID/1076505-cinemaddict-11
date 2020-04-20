@@ -33,7 +33,7 @@ export const generateFilmDetails = () => {
       minutes: `${getRandomIntegerNumber(0, 60)}`,
     },
     country: getRandomArrayItem(FILM_DETAILS_COUNTRIES),
-    genres: getRandomArrayItem(FILM_DETAILS_GENRES),
+    genres: FILM_DETAILS_GENRES,
     description: generateFilmDetailsItems(FILM_DETAILS_DESCRIPTIONS, 6),
     comments: generateFilmsComments(getRandomIntegerNumber(0, 6)),
   };

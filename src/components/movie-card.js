@@ -1,8 +1,11 @@
 // Возвращает разметку блока карточка
 export const createMovieCard = (filmDetails) => {
-  const {image, title, rating, releaseDate, runtime, description, comments} = filmDetails;
+  const {image, title, rating, releaseDate, runtime, description, genres, comments} = filmDetails;
   const {year} = releaseDate;
   const {hours, minutes} = runtime;
+  const getGenres = () => {
+    return genres.map((genre) => genre).join(`, `);
+  };
 
   return (
     `<article class="film-card">
@@ -11,11 +14,11 @@ export const createMovieCard = (filmDetails) => {
           <p class="film-card__info">
             <span class="film-card__year">${year}</span>
             <span class="film-card__duration">${hours}h ${minutes}m</span>
-            <span class="film-card__genre">Musical</span>
+            <span class="film-card__genre">${getGenres()}</span>
           </p>
           <img src="./images/posters/${image}" alt="" class="film-card__poster">
-          <p class="film-card__description">${description.lenth > 140 ? `${description.slice(0, 140)}...` : description}</p>
-          <a class="film-card__comments">${comments.lenth} comments</a>
+          <p class="film-card__description">${description.length > 140 ? `${description.slice(0, 140)}...` : description}</p>
+          <a class="film-card__comments">${comments.length} comments</a>
           <form class="film-card__controls">
             <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to
               watchlist</button>

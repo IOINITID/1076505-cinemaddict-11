@@ -8,6 +8,7 @@ import {createMovieExtraTemplate} from "./components/movie-extra";
 import {createSiteFooterStatisctics} from "./components/site-footer-statistics";
 import {createFilmDetails} from "./components/film-details";
 import {generateFilmsDetails} from "./mock/film-details";
+import {FILMS_COUNT} from "./const";
 
 const MOVIE_CARD_MAX_COUNT = 20;
 const MOVIE_CARD_COUNT_ON_START = 5;
@@ -84,21 +85,27 @@ const filmsListTopRatedContainer = filmsExtraElement[0].querySelector(`.films-li
 const filmsListMostCommentedContainer = filmsExtraElement[1].querySelector(`.films-list__container`);
 
 // Добавление карточек с высоким рейтингом в DOM
-for (let i = 0; i < MOVIE_CARD_EXTRA_COUNT; i++) {
-  render(filmsListTopRatedContainer, createMovieCard());
-}
+// for (let i = 0; i < MOVIE_CARD_EXTRA_COUNT; i++) {
+//   render(filmsListTopRatedContainer, createMovieCard());
+// }
+filmDetails.slice(0, MOVIE_CARD_EXTRA_COUNT).forEach((card) => {
+  render(filmsListTopRatedContainer, createMovieCard(card));
+});
 
 // Добавление карточек с большим количеством комментарив в DOM
-for (let i = 0; i < MOVIE_CARD_EXTRA_COUNT; i++) {
-  render(filmsListMostCommentedContainer, createMovieCard());
-}
+// for (let i = 0; i < MOVIE_CARD_EXTRA_COUNT; i++) {
+//   render(filmsListMostCommentedContainer, createMovieCard());
+// }
+filmDetails.slice(0, MOVIE_CARD_EXTRA_COUNT).forEach((card) => {
+  render(filmsListMostCommentedContainer, createMovieCard(card));
+});
 
 // Объявление контейнеров для добавление разметки
 const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 // Добавление блока статистика в DOM
-render(footerStatisticsElement, createSiteFooterStatisctics());
+render(footerStatisticsElement, createSiteFooterStatisctics(FILMS_COUNT));
 
 // Добавление блока с описанием фильма в DOM
 render(footerElement, createFilmDetails(filmDetails[0]), `afterend`);

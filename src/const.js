@@ -74,3 +74,6 @@ export const FILM_DETAILS_DESCRIPTIONS = [`Lorem ipsum dolor sit amet, consectet
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`
 ];
+
+// Колличество фильмов
+export const FILMS_COUNT = `130 291`;
