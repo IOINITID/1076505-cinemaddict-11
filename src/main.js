@@ -8,7 +8,6 @@ import {createMovieExtraTemplate} from "./components/movie-extra";
 import {createSiteFooterStatisctics} from "./components/site-footer-statistics";
 import {createFilmDetails} from "./components/film-details";
 import {generateFilmsDetails} from "./mock/film-details";
-import {FILMS_COUNT} from "./const";
 
 const MOVIE_CARD_MAX_COUNT = 20;
 const MOVIE_CARD_COUNT_ON_START = 5;
@@ -105,7 +104,7 @@ const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 // Добавление блока статистика в DOM
-render(footerStatisticsElement, createSiteFooterStatisctics(FILMS_COUNT));
+render(footerStatisticsElement, createSiteFooterStatisctics(filmDetails.length));
 
 // Добавление блока с описанием фильма в DOM
 render(footerElement, createFilmDetails(filmDetails[0]), `afterend`);
