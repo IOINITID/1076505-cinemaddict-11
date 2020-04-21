@@ -1,41 +1,38 @@
-import {createUserRank} from "./components/user-rank";
-import {createSiteMenu} from "./components/site-menu";
-import {createSortList} from "./components/sort";
-import {createMovieTemplate} from "./components/movie";
-import {createMovieCard} from "./components/movie-card";
-import {createShowMoreButton} from "./components/show-more-button";
-import {createMovieExtraTemplate} from "./components/movie-extra";
-import {createSiteFooterStatisctics} from "./components/site-footer-statistics";
-import {createFilmDetails} from "./components/film-details";
+import UserRankComponent from "./components/user-rank";
+import SiteMenuComponent from "./components/site-menu";
+import SortComponent from "./components/sort";
+import MoviesComponent from "./components/movies";
+import MovieCardComponent from "./components/movie-card";
+import ShowMoreButtonComponent from "./components/show-more-button";
+import MovieTopRated from "./components/movie-top-rated";
+import MovieMostCommented from "./components/movie-most-commented";
+import SiteFooterStatiscticsComponent from "./components/site-footer-statistics";
+import FilmDetailsComponent from "./components/film-details";
 import {generateFilmsDetails} from "./mock/film-details";
+import {render, RenderPosition} from "./utils";
 
 const MOVIE_CARD_MAX_COUNT = 20;
 const MOVIE_CARD_COUNT_ON_START = 5;
 const MOVIE_CARD_COUNT_BY_BUTTON = 5;
 const MOVIE_CARD_EXTRA_COUNT = 2;
 
-const filmDetails = generateFilmsDetails(MOVIE_CARD_MAX_COUNT);
-
-// Добавляет разметку в DOM дерево
-const render = (container, template, place = `beforeend`) => {
-  return container.insertAdjacentHTML(place, template);
-};
-
 // Объявление контейнеров для добавление разметки
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 
+const filmDetails = generateFilmsDetails(MOVIE_CARD_MAX_COUNT);
+
 // Добавление блока звание пользователя в DOM
-render(siteHeaderElement, createUserRank());
+render(siteHeaderElement, new UserRankComponent().getElement(), RenderPosition.BEFOREEND);
 
 // Добавление блока меню в DOM
-render(siteMainElement, createSiteMenu());
+render(siteMainElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
 
 // Добавление блока сортировки в DOM
-render(siteMainElement, createSortList());
+render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 
 // Добавление блока карточка в DOM
-render(siteMainElement, createMovieTemplate());
+render(siteMainElement, new MoviesComponent().getElement(), RenderPosition.BEFOREEND);
 
 // Объявление контейнеров для добавление разметки
 const filmsElement = siteMainElement.querySelector(`.films`);
@@ -47,17 +44,19 @@ let showingMovieCardCount = MOVIE_CARD_COUNT_ON_START;
 
 // Добавление карточек в DOM
 filmDetails.slice(0, showingMovieCardCount).forEach((card) => {
-  render(filmsListContainer, createMovieCard(card));
+  render(filmsListContainer, new MovieCardComponent(card).getElement(), RenderPosition.BEFOREEND);
 });
 
-// Добавление кнопки показать еще в DOM
-render(filmsListElement, createShowMoreButton());
-
 // Поучает кнопку загрузить еще
-const loadMoreButton = filmsElement.querySelector(`.films-list__show-more`);
+const showMoreButtonComponent = new ShowMoreButtonComponent();
+
+// Добавление кнопки показать еще в DOM
+render(filmsListElement, showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+
+// filmsElement.querySelector(`.films-list__show-more`);
 
 // Обработчик события нажатия на кнопку загрузить еще
-loadMoreButton.addEventListener(`click`, () => {
+showMoreButtonComponent.getElement().addEventListener(`click`, () => {
   // Получает количество карточек отображаемых изначально
   const prevMovieCardCount = showingMovieCardCount;
 
@@ -66,17 +65,21 @@ loadMoreButton.addEventListener(`click`, () => {
 
   // Добавление новых карточек
   filmDetails.slice(prevMovieCardCount, showingMovieCardCount).forEach((card) => {
-    render(filmsListContainer, createMovieCard(card));
+    render(filmsListContainer, new MovieCardComponent(card).getElement(), RenderPosition.BEFOREEND);
   });
 
   // Удаление кнопки загрузить еще по условию
   if (showingMovieCardCount >= filmDetails.length) {
-    loadMoreButton.remove();
+    showMoreButtonComponent.getElement().remove();
+    showMoreButtonComponent.removeElement();
   }
 });
 
 // Добавление шаблона с дополнительными фильмами в DOM
-render(filmsElement, createMovieExtraTemplate());
+render(filmsElement, new MovieTopRated().getElement(), RenderPosition.BEFOREEND);
+
+// Добавление шаблона с дополнительными фильмами в DOM
+render(filmsElement, new MovieMostCommented().getElement(), RenderPosition.BEFOREEND);
 
 // Объявление контейнеров для добавление разметки
 const filmsExtraElement = filmsElement.querySelectorAll(`.films-list--extra`);
@@ -84,19 +87,13 @@ const filmsListTopRatedContainer = filmsExtraElement[0].querySelector(`.films-li
 const filmsListMostCommentedContainer = filmsExtraElement[1].querySelector(`.films-list__container`);
 
 // Добавление карточек с высоким рейтингом в DOM
-// for (let i = 0; i < MOVIE_CARD_EXTRA_COUNT; i++) {
-//   render(filmsListTopRatedContainer, createMovieCard());
-// }
 filmDetails.slice(0, MOVIE_CARD_EXTRA_COUNT).forEach((card) => {
-  render(filmsListTopRatedContainer, createMovieCard(card));
+  render(filmsListTopRatedContainer, new MovieCardComponent(card).getElement(), RenderPosition.BEFOREEND);
 });
 
 // Добавление карточек с большим количеством комментарив в DOM
-// for (let i = 0; i < MOVIE_CARD_EXTRA_COUNT; i++) {
-//   render(filmsListMostCommentedContainer, createMovieCard());
-// }
 filmDetails.slice(0, MOVIE_CARD_EXTRA_COUNT).forEach((card) => {
-  render(filmsListMostCommentedContainer, createMovieCard(card));
+  render(filmsListMostCommentedContainer, new MovieCardComponent(card).getElement(), RenderPosition.BEFOREEND);
 });
 
 // Объявление контейнеров для добавление разметки
@@ -104,7 +101,7 @@ const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 // Добавление блока статистика в DOM
-render(footerStatisticsElement, createSiteFooterStatisctics(filmDetails.length));
+render(footerStatisticsElement, new SiteFooterStatiscticsComponent(filmDetails.length).getElement(), RenderPosition.BEFOREEND);
 
 // Добавление блока с описанием фильма в DOM
-render(footerElement, createFilmDetails(filmDetails[0]), `afterend`);
+render(footerElement, new FilmDetailsComponent(filmDetails[0]).getElement(), RenderPosition.AFTEREND);

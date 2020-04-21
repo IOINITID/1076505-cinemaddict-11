@@ -1,5 +1,7 @@
+import {createElement} from "../utils";
+
 // Возвращает разметку блока карточка
-export const createMovieCard = (filmDetails) => {
+const createMovieCard = (filmDetails) => {
   const {image, title, rating, releaseDate, runtime, description, genres, comments} = filmDetails;
   const {year} = releaseDate;
   const {hours, minutes} = runtime;
@@ -29,3 +31,27 @@ export const createMovieCard = (filmDetails) => {
       </article>`
   );
 };
+
+// Класс карточка фильма
+export default class MovieCard {
+  constructor(filmDetails) {
+    this._filmDetails = filmDetails;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMovieCard(this._filmDetails);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

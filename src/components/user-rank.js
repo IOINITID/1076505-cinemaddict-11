@@ -1,5 +1,7 @@
+import {createElement} from "../utils";
+
 // Возвращает разметку блока звание пользователя
-export const createUserRank = () => {
+const createUserRank = () => {
   return (
     `<section class="header__profile profile">
       <p class="profile__rating">Sci-Fighter</p>
@@ -7,3 +9,26 @@ export const createUserRank = () => {
     </section>`
   );
 };
+
+// Класс звание пользователя
+export default class UserRank {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createUserRank();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
