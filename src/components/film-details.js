@@ -121,8 +121,8 @@ const createFilmDetailsInfo = (info) => {
 // Возвращает разметку блока с коментариями
 const createFilmDetailsComments = (comments) => {
   // Возвращает разметку с комментариями. Не уверен на счет этой записи
-  const getComments = () =>
-    comments.map((comment) => {
+  const getComments = () => {
+    return comments.map((comment) => {
       const {emoji, text, author, date} = comment;
       const {day, month, year, hours, minutes} = date;
 
@@ -140,6 +140,7 @@ const createFilmDetailsComments = (comments) => {
       </div>
     </li>`);
     }).join(`\n`);
+  };
 
   return (
     `<section class="film-details__comments-wrap">
