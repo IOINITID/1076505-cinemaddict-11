@@ -1,10 +1,12 @@
+import {createElement} from "../utils";
 import {MONTH_NAMES} from "../const";
 
 // Возвращает разметку блока подробного описания фильма
-export const createFilmDetails = (filmDetails) => {
-  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments} = filmDetails;
+const createFilmDetails = (filmDetails) => {
+  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, state} = filmDetails;
   const posterDetails = {image, age};
   const infoDetails = {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description};
+  const {inWatchlist, watched, favorite} = state;
 
   return (
     `<section class="film-details">
@@ -22,13 +24,13 @@ export const createFilmDetails = (filmDetails) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${inWatchlist ? `checked` : ``}>
         <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${watched ? `checked` : ``}>
         <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${favorite ? `checked` : ``}>
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>
     </div>
@@ -119,8 +121,8 @@ const createFilmDetailsInfo = (info) => {
 // Возвращает разметку блока с коментариями
 const createFilmDetailsComments = (comments) => {
   // Возвращает разметку с комментариями. Не уверен на счет этой записи
-  const getComments = () =>
-    comments.map((comment) => {
+  const getComments = () => {
+    return comments.map((comment) => {
       const {emoji, text, author, date} = comment;
       const {day, month, year, hours, minutes} = date;
 
@@ -138,6 +140,7 @@ const createFilmDetailsComments = (comments) => {
       </div>
     </li>`);
     }).join(`\n`);
+  };
 
   return (
     `<section class="film-details__comments-wrap">
@@ -179,3 +182,27 @@ const createFilmDetailsComments = (comments) => {
 </section>`
   );
 };
+
+// Класс подробное описание фильма
+export default class FilmDetails {
+  constructor(filmDetails) {
+    this._filmDetails = filmDetails;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetails(this._filmDetails);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

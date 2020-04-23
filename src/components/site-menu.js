@@ -1,5 +1,7 @@
+import {createElement} from "../utils";
+
 // Возвращает разметку блока меню
-export const createSiteMenu = () => {
+const createSiteMenu = () => {
   return (
     `<nav class="main-navigation">
     <div class="main-navigation__items">
@@ -12,3 +14,26 @@ export const createSiteMenu = () => {
   </nav>`
   );
 };
+
+// Класс меню
+export default class SiteMenu {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenu();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
