@@ -2,6 +2,7 @@ import UserRankComponent from "./components/user-rank";
 import SiteMenuComponent from "./components/site-menu";
 import SortComponent from "./components/sort";
 import MoviesComponent from "./components/movies";
+import NoMoviesComponent from "./components/no-movies";
 import MovieCardComponent from "./components/movie-card";
 import ShowMoreButtonComponent from "./components/show-more-button";
 import MovieTopRated from "./components/movie-top-rated";
@@ -23,23 +24,6 @@ const siteMainElement = document.querySelector(`.main`);
 // Создание моков с описанием фильмов
 const filmDetails = generateFilmsDetails(MOVIE_CARD_MAX_COUNT);
 
-// Добавление блока звание пользователя в DOM
-render(siteHeaderElement, new UserRankComponent().getElement(), RenderPosition.BEFOREEND);
-
-// Добавление блока меню в DOM
-render(siteMainElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
-
-// Добавление блока сортировки в DOM
-render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-
-// Добавление блока карточка в DOM
-render(siteMainElement, new MoviesComponent().getElement(), RenderPosition.BEFOREEND);
-
-// Объявление контейнеров для добавление разметки
-const filmsElement = siteMainElement.querySelector(`.films`);
-const filmsListElement = filmsElement.querySelector(`.films-list`);
-const filmsListContainer = filmsListElement.querySelector(`.films-list__container`);
-
 // Отрисовывает карточку с фильмом
 const renderMovieCard = (container, filmDetail) => {
 
@@ -59,16 +43,58 @@ const renderMovieCard = (container, filmDetail) => {
   filmElements.forEach((element) => {
     element.addEventListener(`click`, () => {
       render(footerElement, filmDetailsComponent.getElement(), RenderPosition.AFTEREND);
+      popupCloseButton.addEventListener(`click`, onPopupCloseButtonClick);
+      document.addEventListener(`keydown`, onPopupEscButtonKeydown);
     });
   });
 
-  popupCloseButton.addEventListener(`click`, () => {
+  const removeFilmDetailsComponent = () => {
     filmDetailsComponent.getElement().remove();
-  });
+    // При удалении кеша компонента, не срабатывает повторное нажатие на закрытие окна
+    // filmDetailsComponent.removeElement();
+    popupCloseButton.removeEventListener(`click`, onPopupCloseButtonClick);
+    document.removeEventListener(`keydown`, onPopupEscButtonKeydown);
+  };
+
+  const onPopupCloseButtonClick = (evt) => {
+    evt.preventDefault();
+    removeFilmDetailsComponent();
+  };
+
+  const onPopupEscButtonKeydown = (evt) => {
+    evt.preventDefault();
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      removeFilmDetailsComponent();
+    }
+  };
 };
 
 // Отрисовывает карточки фильмов и кнопку загрузки
 const renderMovies = (filmDetailsList) => {
+  // Добавление блока звание пользователя в DOM
+  render(siteHeaderElement, new UserRankComponent().getElement(), RenderPosition.BEFOREEND);
+
+  // Добавление блока меню в DOM
+  render(siteMainElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
+
+  // Добавление блока сортировки в DOM
+  render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+
+  const isFilmDetails = !!filmDetailsList.length;
+
+  if (!isFilmDetails) {
+    render(siteMainElement, new NoMoviesComponent().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
+
+  // Добавление блока карточка в DOM
+  render(siteMainElement, new MoviesComponent().getElement(), RenderPosition.BEFOREEND);
+
+  // Объявление контейнеров для добавление разметки
+  const filmsElement = siteMainElement.querySelector(`.films`);
+  const filmsListElement = filmsElement.querySelector(`.films-list`);
+  const filmsListContainer = filmsListElement.querySelector(`.films-list__container`);
+
   // Показывает количество карточек в начале
   let showingMovieCardCount = MOVIE_CARD_COUNT_ON_START;
 
