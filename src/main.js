@@ -10,7 +10,7 @@ import MovieMostCommented from "./components/movie-most-commented";
 import SiteFooterStatiscticsComponent from "./components/site-footer-statistics";
 import FilmDetailsComponent from "./components/film-details";
 import {generateFilmsDetails} from "./mock/film-details";
-import {render, RenderPosition} from "./utils";
+import {render, remove, RenderPosition} from "./utils/render";
 
 const MOVIE_CARD_MAX_COUNT = 20;
 const MOVIE_CARD_COUNT_ON_START = 5;
@@ -30,29 +30,25 @@ const renderMovieCard = (container, filmDetail) => {
   const movieCardComponent = new MovieCardComponent(filmDetail);
   const filmDetailsComponent = new FilmDetailsComponent(filmDetail);
 
-  render(container, movieCardComponent.getElement(), RenderPosition.BEFOREEND);
+  render(container, movieCardComponent, RenderPosition.BEFOREEND);
 
   const filmPoster = movieCardComponent.getElement().querySelector(`.film-card__poster`);
   const filmTitle = movieCardComponent.getElement().querySelector(`.film-card__title`);
   const filmComments = movieCardComponent.getElement().querySelector(`.film-card__comments`);
 
-  const popupCloseButton = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
-
   const filmElements = [filmPoster, filmTitle, filmComments];
 
   filmElements.forEach((element) => {
     element.addEventListener(`click`, () => {
-      render(footerElement, filmDetailsComponent.getElement(), RenderPosition.AFTEREND);
-      popupCloseButton.addEventListener(`click`, onPopupCloseButtonClick);
+      render(footerElement, filmDetailsComponent, RenderPosition.AFTEREND);
+      filmDetailsComponent.setPopupCloseButtonClick(onPopupCloseButtonClick);
       document.addEventListener(`keydown`, onPopupEscButtonKeydown);
     });
   });
 
   const removeFilmDetailsComponent = () => {
-    filmDetailsComponent.getElement().remove();
-    // При удалении кеша компонента, не срабатывает повторное нажатие на закрытие окна
-    // filmDetailsComponent.removeElement();
-    popupCloseButton.removeEventListener(`click`, onPopupCloseButtonClick);
+    remove(filmDetailsComponent);
+    filmDetailsComponent.removePopupCloseButtonClick(onPopupCloseButtonClick);
     document.removeEventListener(`keydown`, onPopupEscButtonKeydown);
   };
 
@@ -72,23 +68,23 @@ const renderMovieCard = (container, filmDetail) => {
 // Отрисовывает карточки фильмов и кнопку загрузки
 const renderMovies = (filmDetailsList) => {
   // Добавление блока звание пользователя в DOM
-  render(siteHeaderElement, new UserRankComponent().getElement(), RenderPosition.BEFOREEND);
+  render(siteHeaderElement, new UserRankComponent(), RenderPosition.BEFOREEND);
 
   // Добавление блока меню в DOM
-  render(siteMainElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
 
   // Добавление блока сортировки в DOM
-  render(siteMainElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
 
   const isFilmDetails = !!filmDetailsList.length;
 
   if (!isFilmDetails) {
-    render(siteMainElement, new NoMoviesComponent().getElement(), RenderPosition.BEFOREEND);
+    render(siteMainElement, new NoMoviesComponent(), RenderPosition.BEFOREEND);
     return;
   }
 
   // Добавление блока карточка в DOM
-  render(siteMainElement, new MoviesComponent().getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new MoviesComponent(), RenderPosition.BEFOREEND);
 
   // Объявление контейнеров для добавление разметки
   const filmsElement = siteMainElement.querySelector(`.films`);
@@ -106,10 +102,10 @@ const renderMovies = (filmDetailsList) => {
   const showMoreButtonComponent = new ShowMoreButtonComponent();
 
   // Добавление кнопки показать еще в DOM
-  render(filmsListElement, showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+  render(filmsListElement, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
   // Обработчик события нажатия на кнопку загрузить еще
-  showMoreButtonComponent.getElement().addEventListener(`click`, () => {
+  showMoreButtonComponent.setClickHandler(() => {
     // Получает количество карточек отображаемых изначально
     const prevMovieCardCount = showingMovieCardCount;
 
@@ -118,22 +114,20 @@ const renderMovies = (filmDetailsList) => {
 
     // Добавление новых карточек
     filmDetailsList.slice(prevMovieCardCount, showingMovieCardCount).forEach((card) => {
-      // render(filmsListContainer, new MovieCardComponent(card).getElement(), RenderPosition.BEFOREEND);
       renderMovieCard(filmsListContainer, card);
     });
 
     // Удаление кнопки загрузить еще по условию
     if (showingMovieCardCount >= filmDetailsList.length) {
-      showMoreButtonComponent.getElement().remove();
-      showMoreButtonComponent.removeElement();
+      remove(showMoreButtonComponent, true);
     }
   });
 
   // Добавление шаблона с дополнительными фильмами в DOM
-  render(filmsElement, new MovieTopRated().getElement(), RenderPosition.BEFOREEND);
+  render(filmsElement, new MovieTopRated(), RenderPosition.BEFOREEND);
 
   // Добавление шаблона с дополнительными фильмами в DOM
-  render(filmsElement, new MovieMostCommented().getElement(), RenderPosition.BEFOREEND);
+  render(filmsElement, new MovieMostCommented(), RenderPosition.BEFOREEND);
 
   // Объявление контейнеров для добавление разметки
   const filmsExtraElement = filmsElement.querySelectorAll(`.films-list--extra`);
@@ -142,7 +136,6 @@ const renderMovies = (filmDetailsList) => {
 
   // Добавление карточек с высоким рейтингом в DOM
   filmDetailsList.slice(0, MOVIE_CARD_EXTRA_COUNT).forEach((card) => {
-    // render(filmsListTopRatedContainer, new MovieCardComponent(card).getElement(), RenderPosition.BEFOREEND);
     renderMovieCard(filmsListTopRatedContainer, card);
   });
 
@@ -158,5 +151,5 @@ const footerElement = document.querySelector(`.footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 // Добавление блока статистика в DOM
-render(footerStatisticsElement, new SiteFooterStatiscticsComponent(filmDetails.length).getElement(), RenderPosition.BEFOREEND);
+render(footerStatisticsElement, new SiteFooterStatiscticsComponent(filmDetails.length), RenderPosition.BEFOREEND);
 renderMovies(filmDetails);

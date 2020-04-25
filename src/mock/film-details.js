@@ -1,7 +1,4 @@
-import {
-  getRandomIntegerNumber,
-  getRandomArrayItem
-} from "../utils";
+import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common";
 import {
   FILM_DETAILS_DESCRIPTIONS,
   FILM_DETAILS_TITLES,

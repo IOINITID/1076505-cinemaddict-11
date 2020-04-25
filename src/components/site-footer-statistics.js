@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "../components/abstract-components";
 
 // Возвращает разметку блока статистика
 const createSiteFooterStatisctics = (FILMS_COUNT) => {
@@ -8,25 +8,14 @@ const createSiteFooterStatisctics = (FILMS_COUNT) => {
 };
 
 // Класс статистика
-export default class SiteFooterStatisctics {
+export default class SiteFooterStatisctics extends AbstractComponent {
   constructor(FILMS_COUNT) {
+    super();
+
     this._filmsCount = FILMS_COUNT;
-    this._element = null;
   }
 
   getTemplate() {
     return createSiteFooterStatisctics(this._filmsCount);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

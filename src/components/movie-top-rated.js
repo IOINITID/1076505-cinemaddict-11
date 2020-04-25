@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "../components/abstract-components";
 
 // Возвращает разметку блока фильмы из раздела дополнительно
 const createMovieTopRatedTemplate = () => {
@@ -12,24 +12,8 @@ const createMovieTopRatedTemplate = () => {
 };
 
 // Класс фильмы по рейтингу
-export default class MovieTopRated {
-  constructor() {
-    this._element = null;
-  }
-
+export default class MovieTopRated extends AbstractComponent {
   getTemplate() {
     return createMovieTopRatedTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
