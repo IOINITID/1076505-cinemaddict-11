@@ -24,6 +24,15 @@ const siteMainElement = document.querySelector(`.main`);
 // Создание моков с описанием фильмов
 const filmDetails = generateFilmsDetails(MOVIE_CARD_MAX_COUNT);
 
+// Добавление блока звание пользователя в DOM
+render(siteHeaderElement, new UserRankComponent(), RenderPosition.BEFOREEND);
+
+// Добавление блока меню в DOM
+render(siteMainElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
+
+// Добавление блока сортировки в DOM
+render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
+
 // Отрисовывает карточку с фильмом
 const renderMovieCard = (container, filmDetail) => {
 
@@ -67,15 +76,6 @@ const renderMovieCard = (container, filmDetail) => {
 
 // Отрисовывает карточки фильмов и кнопку загрузки
 const renderMovies = (filmDetailsList) => {
-  // Добавление блока звание пользователя в DOM
-  render(siteHeaderElement, new UserRankComponent(), RenderPosition.BEFOREEND);
-
-  // Добавление блока меню в DOM
-  render(siteMainElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
-
-  // Добавление блока сортировки в DOM
-  render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
-
   const isFilmDetails = !!filmDetailsList.length;
 
   if (!isFilmDetails) {
