@@ -29,13 +29,18 @@ const renderMovieCard = (container, filmDetail) => {
   // Получает список из DOM элементов карточки фильма
   const filmElements = [filmPoster, filmTitle, filmComments];
 
-  // Обработчик нажатия на элементы списка карточки фильма
-  filmElements.forEach((element) => {
+  // Отрисовка подробного описания фильма и создание обработчиков
+  const renderFilmDescriptionComponent = (element) => {
     element.addEventListener(`click`, () => {
       renderComponent(footerElement, filmDetailsComponent, RenderPosition.AFTEREND);
       filmDetailsComponent.setPopupCloseButtonClick(onPopupCloseButtonClick);
       document.addEventListener(`keydown`, onPopupEscButtonKeydown);
     });
+  };
+
+  // Обработчик нажатия на элементы списка карточки фильма
+  filmElements.forEach((element) => {
+    renderFilmDescriptionComponent(element);
   });
 
   // Удаление компонента описание фильма и обработчиков
