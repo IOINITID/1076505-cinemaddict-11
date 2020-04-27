@@ -29,9 +29,7 @@ export const render = (container, component, place) => {
 };
 
 // Удаляет компонент из DOM
-export const remove = (component, isRemoveElement = false) => {
+export const remove = (component) => {
   component.getElement().remove();
-  if (isRemoveElement) {
-    component.removeElement();
-  }
+  component.removeElement();
 };

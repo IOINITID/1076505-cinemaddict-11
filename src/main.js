@@ -1,6 +1,6 @@
 import UserRankComponent from "./components/user-rank";
 import SiteMenuComponent from "./components/site-menu";
-import SortComponent from "./components/sort";
+// import SortComponent from "./components/sort";
 import PageController from "./controllers/page";
 import SiteFooterStatiscticsComponent from "./components/site-footer-statistics";
 import {generateFilmsDetails} from "./mock/film-details";
@@ -21,8 +21,8 @@ render(siteHeaderElement, new UserRankComponent(), RenderPosition.BEFOREEND);
 // Добавление блока меню в DOM
 render(siteMainElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
 
-// Добавление блока сортировки в DOM
-render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
+// // Добавление блока сортировки в DOM
+// render(siteMainElement, new SortComponent(), RenderPosition.BEFOREEND);
 
 // Объявление контейнеров для добавление разметки
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
