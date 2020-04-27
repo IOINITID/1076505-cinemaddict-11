@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "../components/abstract-components";
 
 // Возвращает разметку блока фильмы
 const createMovieMostCommentedTemplate = () => {
@@ -12,24 +12,8 @@ const createMovieMostCommentedTemplate = () => {
 };
 
 // Класс фильмы из раздела дополнительно
-export default class MovieMostCommented {
-  constructor() {
-    this._element = null;
-  }
-
+export default class MovieMostCommented extends AbstractComponent {
   getTemplate() {
     return createMovieMostCommentedTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

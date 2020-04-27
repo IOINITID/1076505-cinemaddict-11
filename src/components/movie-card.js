@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "../components/abstract-components";
 
 // Возвращает разметку блока карточка
 const createMovieCard = (filmDetails) => {
@@ -33,25 +33,14 @@ const createMovieCard = (filmDetails) => {
 };
 
 // Класс карточка фильма
-export default class MovieCard {
+export default class MovieCard extends AbstractComponent {
   constructor(filmDetails) {
+    super();
+
     this._filmDetails = filmDetails;
-    this._element = null;
   }
 
   getTemplate() {
     return createMovieCard(this._filmDetails);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

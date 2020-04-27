@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "../components/abstract-components";
 
 // Возвращает разметку блока фильмы
 const createMoviesTemplate = () => {
@@ -14,24 +14,8 @@ const createMoviesTemplate = () => {
 };
 
 // Класс фильмы
-export default class Movies {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Movies extends AbstractComponent {
   getTemplate() {
     return createMoviesTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

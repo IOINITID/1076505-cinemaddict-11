@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "../components/abstract-components";
 
 // Возвращает разметку блока звание пользователя
 const createUserRank = () => {
@@ -11,24 +11,8 @@ const createUserRank = () => {
 };
 
 // Класс звание пользователя
-export default class UserRank {
-  constructor() {
-    this._element = null;
-  }
-
+export default class UserRank extends AbstractComponent {
   getTemplate() {
     return createUserRank();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

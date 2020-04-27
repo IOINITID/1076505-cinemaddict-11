@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "../components/abstract-components";
 import {MONTH_NAMES} from "../const";
 
 // Возвращает разметку блока подробного описания фильма
@@ -184,25 +184,22 @@ const createFilmDetailsComments = (comments) => {
 };
 
 // Класс подробное описание фильма
-export default class FilmDetails {
+export default class FilmDetails extends AbstractComponent {
   constructor(filmDetails) {
+    super();
+
     this._filmDetails = filmDetails;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmDetails(this._filmDetails);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  setPopupCloseButtonClick(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 
-  removeElement() {
-    this._element = null;
+  removePopupCloseButtonClick(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
   }
 }
