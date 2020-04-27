@@ -39,9 +39,9 @@ const renderMovieCard = (container, filmDetail) => {
   };
 
   // Обработчик нажатия на элементы списка карточки фильма
-  filmElements.forEach((element) => {
+  for (const element of filmElements) {
     renderFilmDescriptionComponent(element);
-  });
+  }
 
   // Удаление компонента описание фильма и обработчиков
   const removeFilmDetailsComponent = () => {
