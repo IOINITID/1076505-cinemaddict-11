@@ -183,7 +183,28 @@ export default class PageController {
 
       renderFilms(filmsListContainer, sortedFilms);
 
-      renderShowMoreButton();
+      const sortElements = this._sortComponent.getElement().querySelectorAll(`.sort__button`);
+
+      const clearActiveState = () => {
+        sortElements.forEach((element) => {
+          element.classList.remove(`sort__button--active`);
+        });
+      };
+
+      const onSortElementClick = (element) => {
+        element.addEventListener(`click`, () => {
+          clearActiveState();
+          element.classList.add(`sort__button--active`);
+        });
+      };
+
+      sortElements.forEach((element) => {
+        onSortElementClick(element);
+      });
+
+      if (!this._showMoreButtonComponent) {
+        renderShowMoreButton();
+      }
     });
   }
 }
