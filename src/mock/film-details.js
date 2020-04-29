@@ -80,7 +80,7 @@ const getCurrentFilmDetailsDate = () => {
   return {
     day: date.getDate(),
     month: date.getMonth(),
-    year: date.getFullYear(),
+    year: date.getFullYear() + Math.floor(Math.random() * 10),
     hours: date.getHours(),
     minutes: date.getMinutes(),
   };
