@@ -11,69 +11,18 @@ const MOVIE_CARD_COUNT_ON_START = 5;
 const MOVIE_CARD_COUNT_BY_BUTTON = 5;
 const MOVIE_CARD_EXTRA_COUNT = 2;
 
-// // Отрисовывает карточку с фильмом
-// const renderMovieCard = (container, filmDetail) => {
-
-//   const movieCardComponent = new MovieCardComponent(filmDetail);
-//   const filmDetailsComponent = new FilmDetailsComponent(filmDetail);
-
-//   // Добавление карточки фильма в DOM
-//   renderComponent(container, movieCardComponent, RenderPosition.BEFOREEND);
-
-//   // Получение елементов для добавления в DOM
-//   const footerElement = document.querySelector(`.footer`);
-//   const filmPoster = movieCardComponent.getElement().querySelector(`.film-card__poster`);
-//   const filmTitle = movieCardComponent.getElement().querySelector(`.film-card__title`);
-//   const filmComments = movieCardComponent.getElement().querySelector(`.film-card__comments`);
-
-//   // Получает список из DOM элементов карточки фильма
-//   const filmElements = [filmPoster, filmTitle, filmComments];
-
-//   // Отрисовка подробного описания фильма и создание обработчиков
-//   const renderFilmDescriptionComponent = (element) => {
-//     element.addEventListener(`click`, () => {
-//       renderComponent(footerElement, filmDetailsComponent, RenderPosition.AFTEREND);
-//       filmDetailsComponent.setPopupCloseButtonClick(onPopupCloseButtonClick);
-//       document.addEventListener(`keydown`, onPopupEscButtonKeydown);
-//     });
-//   };
-
-//   // Обработчик нажатия на элементы списка карточки фильма
-//   filmElements.forEach((element) => {
-//     renderFilmDescriptionComponent(element);
-//   });
-
-//   // Удаление компонента описание фильма и обработчиков
-//   const removeFilmDetailsComponent = () => {
-//     remove(filmDetailsComponent);
-//     filmDetailsComponent.removePopupCloseButtonClick(onPopupCloseButtonClick);
-//     document.removeEventListener(`keydown`, onPopupEscButtonKeydown);
-//   };
-
-//   // Обработчик закрытия модального окна на кнопку закрыть
-//   const onPopupCloseButtonClick = (evt) => {
-//     evt.preventDefault();
-//     removeFilmDetailsComponent();
-//   };
-
-//   // Обработчик закрытия модального окна по клавише Esc
-//   const onPopupEscButtonKeydown = (evt) => {
-//     evt.preventDefault();
-//     if (evt.key === `Escape` || evt.key === `Esc`) {
-//       removeFilmDetailsComponent();
-//     }
-//   };
-// };
-
+// Отрисовывает фильмы
 const renderFilms = (filmsListContainer, films) => {
-  films.forEach((card) => {
-    // renderMovieCard(filmsListContainer, card);
+  return films.map((card) => {
     const movieController = new MovieController(filmsListContainer);
+
     movieController.render(card);
+
+    return movieController;
   });
 };
 
-
+// Сортирует фильмы по условию
 const getSortedFilms = (films, sortType, from, to) => {
   let sortedFilms = [];
   const showingFilms = films.slice();
@@ -99,6 +48,7 @@ export default class PageController {
     this._container = container;
 
     this._films = [];
+    this._showedFilmControllers = [];
     this._showingMovieCardCount = MOVIE_CARD_COUNT_ON_START;
 
     this._noMoviesComponent = new NoMoviesComponent();
@@ -109,6 +59,7 @@ export default class PageController {
     this._sortComponent = new SortComponent();
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
@@ -136,7 +87,8 @@ export default class PageController {
     const filmsListContainer = filmsListElement.querySelector(`.films-list__container`);
 
     // Добавление карточек в DOM
-    renderFilms(filmsListContainer, films.slice(0, this._showingMovieCardCount));
+    const newFilms = renderFilms(filmsListContainer, this._films.slice(0, this._showingMovieCardCount));
+    this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
     // Добавление кнопки показать еще в DOM
     this._renderShowMoreButton();
@@ -177,8 +129,9 @@ export default class PageController {
       this._showingMovieCardCount = this._showingMovieCardCount + MOVIE_CARD_COUNT_BY_BUTTON;
 
       const sortedFilms = getSortedFilms(this._films, this._sortComponent.getSortType(), prevMovieCardCount, this._showingMovieCardCount);
+      const newFilms = renderFilms(filmsListContainer, sortedFilms);
 
-      renderFilms(filmsListContainer, sortedFilms.slice(0, this._showingMovieCardCount));
+      this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
       if (this._showingMovieCardCount >= this._films.length) {
         remove(this._showMoreButtonComponent);
@@ -198,7 +151,8 @@ export default class PageController {
 
     filmsListContainer.innerHTML = ``;
 
-    renderFilms(filmsListContainer, sortedFilms);
+    const newFilms = renderFilms(filmsListContainer, sortedFilms);
+    this._showedFilmControllers = newFilms;
 
     if (!this._showMoreButtonComponent) {
       this._renderShowMoreButton();
