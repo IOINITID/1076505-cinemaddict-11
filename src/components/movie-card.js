@@ -43,4 +43,16 @@ export default class MovieCard extends AbstractComponent {
   getTemplate() {
     return createMovieCard(this._filmDetails);
   }
+
+  setAddToWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
+  }
+
+  setMarkAsWatchedButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
+  }
+
+  setMarkAsFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+  }
 }

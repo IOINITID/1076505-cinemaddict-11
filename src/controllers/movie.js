@@ -2,9 +2,17 @@ import MovieCardComponent from "../components/movie-card";
 import FilmDetailsComponent from "../components/film-details";
 import {render as renderComponent, remove, RenderPosition} from "../utils/render";
 
+const Mode = {
+  DEFAULT: `default`,
+  OPEN: `open`,
+};
+
 export default class MovieController {
-  constructor(container) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+    this._mode = Mode.DEFAULT;
 
     this._footerElement = document.querySelector(`.footer`);
 
@@ -20,6 +28,34 @@ export default class MovieController {
   render(filmDetail) {
     this._movieCardComponent = new MovieCardComponent(filmDetail);
     this._filmDetailsComponent = new FilmDetailsComponent(filmDetail);
+
+    // Нажатие на кнопку добавить в список просмотра
+    this._movieCardComponent.setAddToWatchlistButtonClickHandler(() => {
+      this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
+        inWatchlist: !filmDetail.state.inWatchlist,
+      }));
+    });
+
+    // Нажатие на кнопку добавить к просмотренному
+    this._movieCardComponent.setMarkAsWatchedButtonClickHandler(() => {
+      this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
+        watched: !filmDetail.state.watched,
+      }));
+    });
+
+    // Нажатие на кнопку добавить в избранное
+    this._movieCardComponent.setMarkAsFavoriteButtonClickHandler(() => {
+      this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
+        favorite: !filmDetail.state.favorite,
+      }));
+    });
+
+    // Нажатие на кнопку добавить в избранное
+    this._movieCardComponent.setMarkAsFavoriteButtonClickHandler(() => {
+      this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
+        favorite: !filmDetail.state.favorite,
+      }));
+    });
 
     // Добавление карточки фильма в DOM
     renderComponent(this._container, this._movieCardComponent, RenderPosition.BEFOREEND);

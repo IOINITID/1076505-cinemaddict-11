@@ -1,4 +1,4 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractSmartComponent from "../components/abstract-smart-component";
 import {MONTH_NAMES} from "../const";
 
 // Возвращает разметку блока подробного описания фильма
@@ -184,22 +184,67 @@ const createFilmDetailsComments = (comments) => {
 };
 
 // Класс подробное описание фильма
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(filmDetails) {
     super();
 
     this._filmDetails = filmDetails;
+    this._setPopupCloseButtonClick = null;
+    this._removePopupCloseButtonClick = null;
+
+    this._subscribeOnEvents();
+  }
+
+  recoveryListeners() {
+    this.setPopupCloseButtonClick(this._setPopupCloseButtonClick);
+    this.removePopupCloseButtonClick(this._removePopupCloseButtonClick);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   getTemplate() {
     return createFilmDetails(this._filmDetails);
   }
 
+  reset() {
+    const filmDetails = this._filmDetails;
+
+    this._inWatchlist = !!filmDetails.state.inWatchlist;
+    this._watched = !!filmDetails.state._watched;
+    this._favorite = !!filmDetails.state._favorite;
+
+    this.rerender();
+  }
+
   setPopupCloseButtonClick(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._setPopupCloseButtonClick = handler;
   }
 
   removePopupCloseButtonClick(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
+    this._removePopupCloseButtonClick = handler;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, () => {
+      this._inWatchlist = !this._inWatchlist;
+      this.rerender();
+    });
+
+    element.querySelector(`.film-details__control-label--watched`).addEventListener(`click`, () => {
+      this._watched = !this._watched;
+      this.rerender();
+    });
+
+    element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, () => {
+      this._favorite = !this._favorite;
+      this.rerender();
+    });
   }
 }
