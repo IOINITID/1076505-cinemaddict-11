@@ -246,5 +246,26 @@ export default class FilmDetails extends AbstractSmartComponent {
       this._favorite = !this._favorite;
       this.rerender();
     });
+
+    const emojiContainer = element.querySelector(`.film-details__add-emoji-label`);
+    const emoji = element.querySelectorAll(`.film-details__emoji-item`);
+
+    emoji.forEach((item) => {
+      item.addEventListener(`change`, () => {
+
+        const emojiImage = document.createElement(`img`);
+
+        emojiImage.src = `images/emoji/${item.value}.png`;
+        emojiImage.width = 55;
+        emojiImage.height = 55;
+        emojiImage.alt = `emoji-${item.value}`;
+
+        if (emojiContainer.firstChild && emojiContainer.firstChild.tagName === `IMG`) {
+          emojiContainer.firstChild.remove();
+        }
+
+        emojiContainer.appendChild(emojiImage);
+      });
+    });
   }
 }

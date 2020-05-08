@@ -74,12 +74,22 @@ export default class MovieController {
     });
   }
 
+  // Закрывает все попапы
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._removeFilmDetailsComponent();
+      this._mode = Mode.DEFAULT;
+    }
+  }
+
   // Отрисовка подробного описания фильма и создание обработчиков
   _renderFilmDescriptionComponent(element) {
     element.addEventListener(`click`, () => {
       renderComponent(this._footerElement, this._filmDetailsComponent, RenderPosition.AFTEREND);
       this._filmDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
       document.addEventListener(`keydown`, this._onPopupEscButtonKeydown);
+      this._onViewChange();
+      this._mode = Mode.OPEN;
     });
   }
 
