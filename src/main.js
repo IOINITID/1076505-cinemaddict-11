@@ -1,33 +1,56 @@
 import UserRankComponent from "./components/user-rank";
 import SiteMenuComponent from "./components/site-menu";
-import PageController from "./controllers/page";
 import SiteFooterStatiscticsComponent from "./components/site-footer-statistics";
+import PageController from "./controllers/page";
 import {generateFilmsDetails} from "./mock/film-details";
 import {render, RenderPosition} from "./utils/render";
 
+/**
+ * Объявление количества карточек с фильмами.
+ */
 const MOVIE_CARD_MAX_COUNT = 20;
 
-// Объявление контейнеров для добавление разметки
+/**
+ * Объявление элемента (Header) DOM для добавления разметки.
+ */
 const siteHeaderElement = document.querySelector(`.header`);
+
+/**
+ * Объявление элемента (Main) DOM для добавления разметки.
+ */
 const siteMainElement = document.querySelector(`.main`);
 
-// Создание моков с описанием фильмов
+/**
+ * Объявление данных с описанием фильмов.
+ */
 const filmDetails = generateFilmsDetails(MOVIE_CARD_MAX_COUNT);
 
-// Добавление блока звание пользователя в DOM
+/**
+ * Отрисовка блока (Звание пользователя | User rank) в DOM.
+ */
 render(siteHeaderElement, new UserRankComponent(), RenderPosition.BEFOREEND);
 
-// Добавление блока меню в DOM
+/**
+ * Отрисовка блока (Меню | Site menu) в DOM.
+ */
 render(siteMainElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
 
-// Объявление контейнеров для добавление разметки
+/**
+ * Объявление элемента (Footer statistics) DOM для добавления разметки.
+ */
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 
-// Добавление блока статистика в DOM
+/**
+ * Отрисовка блока (Cтатистика | Site footer statistics) в DOM.
+ */
 render(footerStatisticsElement, new SiteFooterStatiscticsComponent(filmDetails.length), RenderPosition.BEFOREEND);
 
-// Получает экземпляр класса контроллер страницы
+/**
+ * Объявление экземпляра класса (Контроллер страницы | Page controller).
+ */
 const pageController = new PageController(siteMainElement);
 
-// Добавляет карточки фильмов в DOM
+/**
+ * Отрисовка карточек фильмов в DOM.
+ */
 pageController.render(filmDetails);

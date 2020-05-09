@@ -1,20 +1,34 @@
 import AbstractComponent from "../components/abstract-components";
 
-// Возвращает разметку блока статистика
-const createSiteFooterStatisctics = (FILMS_COUNT) => {
+/**
+ * Функция, которая возвращает разметку блока (Статистика | Site footer statistics).
+ * @param {Number} filmsCount количество фильмов всего.
+ * @return {String} строка, содержащая HTML разметку.
+ */
+const createSiteFooterStatisctics = (filmsCount) => {
   return (
-    `<p>${FILMS_COUNT} movies inside</p>`
+    `<p>${filmsCount} movies inside</p>`
   );
 };
 
-// Класс статистика
+/**
+ * Класс (Статистика | Site footer statistics).
+ */
 export default class SiteFooterStatisctics extends AbstractComponent {
-  constructor(FILMS_COUNT) {
+  /**
+   * Конструктор, принимающий параметры.
+   * @param {Number} filmsCount количество фильмов.
+   */
+  constructor(filmsCount) {
     super();
 
-    this._filmsCount = FILMS_COUNT;
+    this._filmsCount = filmsCount;
   }
 
+  /**
+   * Метод, который возвращает HTML разметку в виде строки.
+   * @return {String} возвращает строку с HTML разметкой.
+   */
   getTemplate() {
     return createSiteFooterStatisctics(this._filmsCount);
   }

@@ -1,6 +1,8 @@
 import {createElement} from "../utils/render";
 
-// Класс абстрактного компонента
+/**
+ * Класс (Абстрактного компонента | Abstract component).
+ */
 export default class AbstractComponent {
   constructor() {
     if (new.target === AbstractComponent) {
@@ -10,10 +12,17 @@ export default class AbstractComponent {
     this._element = null;
   }
 
+  /**
+   * Метод, который возвращает строку с HTML разметкой.
+   */
   getTemplate() {
     throw new Error(`Abstract method not implemented: getTemplate`);
   }
 
+  /**
+   * Метод, который возвращает DOM элемент из переданной HTML разметки.
+   * @return {Element} элемент DOM.
+   */
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
@@ -22,6 +31,9 @@ export default class AbstractComponent {
     return this._element;
   }
 
+  /**
+   * Метод, который удаляет элемент из памяти.
+   */
   removeElement() {
     this._element = null;
   }

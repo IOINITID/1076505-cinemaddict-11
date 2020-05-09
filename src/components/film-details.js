@@ -192,12 +192,21 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._setPopupCloseButtonClick = null;
     this._removePopupCloseButtonClick = null;
 
+    this._inWatchlist = filmDetails.state.inWatchlist;
+    this._watched = filmDetails.state.watched;
+    this._favorite = filmDetails.state.favorite;
+
     this._subscribeOnEvents();
   }
 
   recoveryListeners() {
     this.setPopupCloseButtonClick(this._setPopupCloseButtonClick);
     this.removePopupCloseButtonClick(this._removePopupCloseButtonClick);
+
+    this.setAddToWatchlistButtonClickHandler(this._setAddToWatchlistButtonClickHandler);
+    this.setMarkAsWatchedButtonClickHandler(this._setMarkAsWatchedButtonClickHandler);
+    this.setMarkAsFavoriteButtonClickHandler(this._setMarkAsFavoriteButtonClickHandler);
+
     this._subscribeOnEvents();
   }
 
@@ -209,12 +218,27 @@ export default class FilmDetails extends AbstractSmartComponent {
     return createFilmDetails(this._filmDetails);
   }
 
+  setAddToWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this._setAddToWatchlistButtonClickHandler = handler;
+  }
+
+  setMarkAsWatchedButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this._setMarkAsWatchedButtonClickHandler = handler;
+  }
+
+  setMarkAsFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this._setMarkAsFavoriteButtonClickHandler = handler;
+  }
+
   reset() {
     const filmDetails = this._filmDetails;
 
     this._inWatchlist = !!filmDetails.state.inWatchlist;
-    this._watched = !!filmDetails.state._watched;
-    this._favorite = !!filmDetails.state._favorite;
+    this._watched = !!filmDetails.state.watched;
+    this._favorite = !!filmDetails.state.favorite;
 
     this.rerender();
   }
@@ -232,27 +256,11 @@ export default class FilmDetails extends AbstractSmartComponent {
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    element.querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, () => {
-      this._inWatchlist = !this._inWatchlist;
-      this.rerender();
-    });
-
-    element.querySelector(`.film-details__control-label--watched`).addEventListener(`click`, () => {
-      this._watched = !this._watched;
-      this.rerender();
-    });
-
-    element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, () => {
-      this._favorite = !this._favorite;
-      this.rerender();
-    });
-
     const emojiContainer = element.querySelector(`.film-details__add-emoji-label`);
     const emoji = element.querySelectorAll(`.film-details__emoji-item`);
 
     emoji.forEach((item) => {
       item.addEventListener(`change`, () => {
-
         const emojiImage = document.createElement(`img`);
 
         emojiImage.src = `images/emoji/${item.value}.png`;

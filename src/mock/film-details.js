@@ -1,4 +1,7 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common";
+import {
+  getRandomIntegerNumber,
+  getRandomArrayItem
+} from "../utils/common";
 import {
   FILM_DETAILS_DESCRIPTIONS,
   FILM_DETAILS_TITLES,
@@ -13,7 +16,10 @@ import {
   COMMENT_AUTHORS,
 } from "../const";
 
-// Возвращет подробное описанием фильма
+/**
+ * Функция, которая возвращет подробное описание фильма.
+ * @return {Object} возвращает объект с подробным описанием фильма.
+ */
 export const generateFilmDetails = () => {
   return {
     title: getRandomArrayItem(FILM_DETAILS_TITLES),
@@ -41,12 +47,19 @@ export const generateFilmDetails = () => {
   };
 };
 
-// Возвращает список подробных описаний фильмов
+/**
+ * Функция, которая возвращает данные описания фильмов.
+ * @param {Number} count количество данных, которые вернет функция.
+ * @return {Array} массив с объектами, который содержит описания фильмов.
+ */
 export const generateFilmsDetails = (count) => {
   return new Array(count).fill(``).map(generateFilmDetails);
 };
 
-// Возвращает комметарий к фильму
+/**
+ * Функция, которая возвращает комметарий к фильму.
+ * @return {Object} возвращает объект с комментарием.
+ */
 export const generateFilmComments = () => {
   return {
     emoji: getRandomArrayItem(EMOJI_NAMES),
@@ -56,12 +69,22 @@ export const generateFilmComments = () => {
   };
 };
 
-// Возвращает список комментариев к фильму
+/**
+ * Функция, которая возвращает список комментариев фильма.
+ * @param {Number} count количество коментариев, которые вернет функция.
+ * @return {Array} массив с объектами, который содержит коментарии фильма.
+ */
 export const generateFilmsComments = (count) => {
   return new Array(count).fill(``).map(generateFilmComments);
 };
 
-// Возвращает случайное количество элементов списка
+/**
+ * Возвращает строку с элементами списка, которые разделены.
+ * @param {Array} items список с элементами.
+ * @param {Number} count количество элементов, которые вернет функция.
+ * @param {String} devider разделитель, который будет разделять элементы.
+ * @return {String} строка с элементами, которые будут разделены.
+ */
 const generateFilmDetailsItems = (items, count, devider = ` `) => {
   let item = new Set();
   let itemCount = getRandomIntegerNumber(1, count);
@@ -74,9 +97,13 @@ const generateFilmDetailsItems = (items, count, devider = ` `) => {
   return [...item].join(devider);
 };
 
-// Возвращает текущую дату
+/**
+ * Функция, которая возвращает текущую дату.
+ * @return {Object} объект, содержащий текущую дату.
+ */
 const getCurrentFilmDetailsDate = () => {
   const date = new Date();
+
   return {
     day: date.getDate(),
     month: date.getMonth(),
