@@ -1,6 +1,6 @@
 import MovieCardComponent from "../components/movie-card";
 import FilmDetailsComponent from "../components/film-details";
-import {render as renderComponent, remove, RenderPosition} from "../utils/render";
+import {render as renderComponent, remove, replace, RenderPosition} from "../utils/render";
 
 /**
  * Объявляет список с состояниями карточек фильма.
@@ -41,6 +41,10 @@ export default class MovieController {
    * @param {Object} filmDetail объект с данными для отрисовки карточки фильма.
    */
   render(filmDetail) {
+
+    const oldFilm = this._movieCardComponent;
+    const oldFilmDetails = this._filmDetailsComponent;
+
     /**
      * Объявление экземпляра класса (Карточка фильма | Movie card).
      */
@@ -129,10 +133,15 @@ export default class MovieController {
       }));
     });
 
-    /**
+    if (oldFilm && oldFilmDetails) {
+      replace(this._movieCardComponent, oldFilm);
+      replace(this._filmDetailsComponent, oldFilmDetails);
+    } else {
+      /**
      * Отрисовка блока (Карточка фильма | Movie card) в DOM.
      */
-    renderComponent(this._container, this._movieCardComponent, RenderPosition.BEFOREEND);
+      renderComponent(this._container, this._movieCardComponent, RenderPosition.BEFOREEND);
+    }
 
     /**
      * Объявление элемента (Film card poster) DOM для добавления разметки.
