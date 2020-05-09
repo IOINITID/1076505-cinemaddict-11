@@ -1,6 +1,5 @@
 import AbstractComponent from "../components/abstract-components";
 
-// Возвращает разметку блока фильмы из раздела дополнительно
 const createMovieTopRatedTemplate = () => {
   return (
     `<section class="films-list--extra">
@@ -11,7 +10,6 @@ const createMovieTopRatedTemplate = () => {
   );
 };
 
-// Класс фильмы по рейтингу
 export default class MovieTopRated extends AbstractComponent {
   getTemplate() {
     return createMovieTopRatedTemplate();

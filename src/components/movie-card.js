@@ -1,10 +1,5 @@
 import AbstractComponent from "../components/abstract-components";
 
-/**
- * Возвращает разметку блока (Карточка фильма | Movie card).
- * @param {Array} filmDetails массив с объектами, которые содержат данные с описанием дял карточек фильмов.
- * @return {String} возвращает HTML разметку в виде строки.
- */
 const createMovieCard = (filmDetails) => {
   const {image, title, rating, releaseDate, runtime, description, genres, comments, state} = filmDetails;
   const {year} = releaseDate;
@@ -37,14 +32,7 @@ const createMovieCard = (filmDetails) => {
   );
 };
 
-/**
- * Класс (Карточка фильма | Movie card).
- */
 export default class MovieCard extends AbstractComponent {
-  /**
-   * Конструктор, принимающий параметры.
-   * @param {Array} filmDetails массив объектов, которые содержат данные с описаниями для картоек фильмов.
-   */
   constructor(filmDetails) {
     super();
 
@@ -55,26 +43,14 @@ export default class MovieCard extends AbstractComponent {
     return createMovieCard(this._filmDetails);
   }
 
-  /**
-   * Метод, который принимает функцию обработчик события при нажатия на кнопку (Add to watchlist).
-   * @param {Function} handler функция обработчик события, которая будет выполнена.
-   */
   setAddToWatchlistButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
   }
 
-  /**
-   * Метод, который принимает функцию обработчик события при нажатия на кнопку (Mark as watched).
-   * @param {Function} handler функция обработчик события, которая будет выполнена.
-   */
   setMarkAsWatchedButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
   }
 
-  /**
-   * Метод, который принимает функцию обработчик события при нажатия на кнопку (Mark as favorite).
-   * @param {Function} handler функция обработчик события, которая будет выполнена.
-   */
   setMarkAsFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }

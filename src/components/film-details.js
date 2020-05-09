@@ -1,7 +1,6 @@
 import AbstractSmartComponent from "../components/abstract-smart-component";
 import {MONTH_NAMES} from "../const";
 
-// Возвращает разметку блока подробного описания фильма
 const createFilmDetails = (filmDetails) => {
   const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, state} = filmDetails;
   const posterDetails = {image, age};
@@ -44,7 +43,6 @@ const createFilmDetails = (filmDetails) => {
 </section>`);
 };
 
-// Возвращает разметку блока с обложкой фильма и рейтингом
 const createFilmDetailsPoster = (details) => {
   const {image, age} = details;
 
@@ -57,7 +55,6 @@ const createFilmDetailsPoster = (details) => {
   );
 };
 
-// Возвращает разметку блока с информацией о фильме
 const createFilmDetailsInfo = (info) => {
   const {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description} = info;
   const {hours, minutes} = runtime;
@@ -118,9 +115,7 @@ const createFilmDetailsInfo = (info) => {
   );
 };
 
-// Возвращает разметку блока с коментариями
 const createFilmDetailsComments = (comments) => {
-  // Возвращает разметку с комментариями. Не уверен на счет этой записи
   const getComments = () => {
     return comments.map((comment) => {
       const {emoji, text, author, date} = comment;
@@ -183,7 +178,6 @@ const createFilmDetailsComments = (comments) => {
   );
 };
 
-// Класс подробное описание фильма
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(filmDetails) {
     super();

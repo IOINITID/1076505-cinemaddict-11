@@ -1,31 +1,13 @@
-/**
- * Объявление списка званий.
- */
 export const RANK_NAMES = [`novice`, `fan`, `movie buff`];
 
-/**
- * Объявление списка месяцев.
- */
 export const MONTH_NAMES = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`];
 
-/**
- * Объявление списка эмоджи.
- */
 export const EMOJI_NAMES = [`smile`, `sleeping`, `puke`, `angry`];
 
-/**
- * Объявление списка тестовых сообщений.
- */
 export const COMMENT_TEXT = [`Interesting setting and a good cast`, `Booooooooooring`, `Very very old. Meh`, `Almost two hours? Seriously?`];
 
-/**
- * Объявление списка имен авторов.
- */
 export const COMMENT_AUTHORS = [`Tim Macoveev`, `John Doe`];
 
-/**
- * Объявление списка названий фильмов.
- */
 export const FILM_DETAILS_TITLES = [`Made For Each Other`,
   `Popeye Meets Sinbad`,
   `Sagebrush Trail`,
@@ -35,9 +17,6 @@ export const FILM_DETAILS_TITLES = [`Made For Each Other`,
   `The Man With The Golden Arm`
 ];
 
-/**
- * Объявление списка изображений фильмов.
- */
 export const FILM_DETAILS_POSTERS = [`made-for-each-other.png`,
   `popeye-meets-sinbad.png`,
   `sagebrush-trail.jpg`,
@@ -47,34 +26,16 @@ export const FILM_DETAILS_POSTERS = [`made-for-each-other.png`,
   `the-man-with-the-golden-arm.jpg`
 ];
 
-/**
- * Объявление списка режисеров.
- */
 export const FILM_DETAILS_DIRECTORS = [`Anthony Mann`, `Anne Wigton`, `Heinz Herald`, `Richard Weil`];
 
-/**
- * Объявление списка сценаристов.
- */
 export const FILM_DETAILS_WRITERS = [`Anne Wigton`, `Heinz Herald`, `Richard Weil`];
 
-/**
- * Объявление списка актеров.
- */
 export const FILM_DETAILS_ACTORS = [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`];
 
-/**
- * Объявление списка стран.
- */
 export const FILM_DETAILS_COUNTRIES = [`USA`, `Canada`, `Germany`, `France`];
 
-/**
- * Объявление списка жанров.
- */
 export const FILM_DETAILS_GENRES = [`Drama`, `Film-Noir`, `Mystery`, `Musical`];
 
-/**
- * Объявление списка описаний фильма.
- */
 export const FILM_DETAILS_DESCRIPTIONS = [`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra.`,

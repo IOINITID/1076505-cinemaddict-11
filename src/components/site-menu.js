@@ -1,9 +1,5 @@
 import AbstractComponent from "../components/abstract-components";
 
-/**
- * Функция, которая возвращает разметку блока (Меню | Site menu).
- * @return {String} строка, содержащая HTML разметку.
- */
 const createSiteMenu = () => {
   return (
     `<nav class="main-navigation">
@@ -18,9 +14,6 @@ const createSiteMenu = () => {
   );
 };
 
-/**
- * Класс (Меню | Site menu).
- */
 export default class SiteMenu extends AbstractComponent {
   getTemplate() {
     return createSiteMenu();

@@ -1,9 +1,5 @@
 import AbstractComponent from "../components/abstract-components";
 
-/**
- * Функция, которая возвращает разметку блока (Звание пользователя | User rank).
- * @return {String} строка, содержащая HTML разметку.
- */
 const createUserRank = () => {
   return (
     `<section class="header__profile profile">
@@ -13,9 +9,6 @@ const createUserRank = () => {
   );
 };
 
-/**
- * Класс (Звание пользователя | User rank).
- */
 export default class UserRank extends AbstractComponent {
   getTemplate() {
     return createUserRank();

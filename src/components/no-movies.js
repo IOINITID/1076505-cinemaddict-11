@@ -10,7 +10,6 @@ const createNoMoviesTemplate = () => {
   );
 };
 
-// Класс фильмы
 export default class NoMovies extends AbstractComponent {
   getTemplate() {
     return createNoMoviesTemplate();
