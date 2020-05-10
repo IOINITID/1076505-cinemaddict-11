@@ -2,10 +2,9 @@ import AbstractSmartComponent from "../components/abstract-smart-component";
 import {MONTH_NAMES} from "../const";
 
 const createFilmDetails = (filmDetails) => {
-  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, state} = filmDetails;
+  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, inWatchlist, watched, favorite} = filmDetails;
   const posterDetails = {image, age};
   const infoDetails = {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description};
-  const {inWatchlist, watched, favorite} = state;
 
   return (
     `<section class="film-details">
@@ -186,9 +185,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._setPopupCloseButtonClick = null;
     this._removePopupCloseButtonClick = null;
 
-    this._inWatchlist = filmDetails.state.inWatchlist;
-    this._watched = filmDetails.state.watched;
-    this._favorite = filmDetails.state.favorite;
+    this._inWatchlist = filmDetails.inWatchlist;
+    this._watched = filmDetails.watched;
+    this._favorite = filmDetails.favorite;
 
     this._subscribeOnEvents();
   }
@@ -230,9 +229,9 @@ export default class FilmDetails extends AbstractSmartComponent {
   reset() {
     const filmDetails = this._filmDetails;
 
-    this._inWatchlist = !!filmDetails.state.inWatchlist;
-    this._watched = !!filmDetails.state.watched;
-    this._favorite = !!filmDetails.state.favorite;
+    this._inWatchlist = !!filmDetails.inWatchlist;
+    this._watched = !!filmDetails.watched;
+    this._favorite = !!filmDetails.favorite;
 
     this.rerender();
   }
@@ -263,7 +262,7 @@ export default class FilmDetails extends AbstractSmartComponent {
         emojiImage.alt = `emoji-${item.value}`;
 
         if (emojiContainer.firstChild && emojiContainer.firstChild.tagName === `IMG`) {
-          emojiContainer.firstChild.remove();
+          emojiContainer.innerHTML = ``;
         }
 
         emojiContainer.appendChild(emojiImage);

@@ -1,10 +1,9 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
 const createMovieCard = (filmDetails) => {
-  const {image, title, rating, releaseDate, runtime, description, genres, comments, state} = filmDetails;
+  const {image, title, rating, releaseDate, runtime, description, genres, comments, inWatchlist, watched, favorite} = filmDetails;
   const {year} = releaseDate;
   const {hours, minutes} = runtime;
-  const {inWatchlist, watched, favorite} = state;
   const getGenres = () => {
     return genres.map((genre) => genre).join(`, `);
   };

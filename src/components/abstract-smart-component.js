@@ -1,6 +1,13 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
 export default class AbstractSmartComponent extends AbstractComponent {
+  constructor() {
+    super();
+
+    if (new.target === AbstractSmartComponent) {
+      throw new Error(`Can't instantiate AbstractSmartComponent, only concrete one.`);
+    }
+  }
   recoveryListeners() {
     throw new Error(`Abstract method not implemented: recoveryListeners`);
   }

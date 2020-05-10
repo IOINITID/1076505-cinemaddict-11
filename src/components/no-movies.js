@@ -1,4 +1,4 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
 const createNoMoviesTemplate = () => {
   return (

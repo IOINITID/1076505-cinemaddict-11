@@ -25,6 +25,7 @@ export default class MovieController {
   }
 
   render(filmDetail) {
+    this._fildetails = filmDetail;
 
     const oldFilm = this._movieCardComponent;
     const oldFilmDetails = this._filmDetailsComponent;
@@ -33,47 +34,41 @@ export default class MovieController {
 
     this._filmDetailsComponent = new FilmDetailsComponent(filmDetail);
 
-    this._movieCardComponent.setAddToWatchlistButtonClickHandler((evt) => {
+    const onInWatchlistDataChange = (evt) => {
       evt.preventDefault();
 
       this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
-        inWatchlist: !filmDetail.state.inWatchlist,
+        inWatchlist: !filmDetail.inWatchlist,
       }));
-    });
+    };
 
-    this._filmDetailsComponent.setAddToWatchlistButtonClickHandler(() => {
-      this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
-        inWatchlist: !filmDetail.state.inWatchlist,
-      }));
-    });
-
-    this._movieCardComponent.setMarkAsWatchedButtonClickHandler((evt) => {
+    const onWatchedDataChange = (evt) => {
       evt.preventDefault();
 
       this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
-        watched: !filmDetail.state.watched,
+        watched: !filmDetail.watched,
       }));
-    });
+    };
 
-    this._filmDetailsComponent.setMarkAsWatchedButtonClickHandler(() => {
-      this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
-        watched: !filmDetail.state.watched,
-      }));
-    });
-
-    this._movieCardComponent.setMarkAsFavoriteButtonClickHandler((evt) => {
+    const onFavoriteDataChange = (evt) => {
       evt.preventDefault();
 
       this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
-        favorite: !filmDetail.state.favorite,
+        favorite: !filmDetail.favorite,
       }));
-    });
+    };
 
-    this._filmDetailsComponent.setMarkAsFavoriteButtonClickHandler(() => {
-      this._onDataChange(this, filmDetail, Object.assign({}, filmDetail, {
-        favorite: !filmDetail.state.favorite,
-      }));
-    });
+    this._movieCardComponent.setAddToWatchlistButtonClickHandler(onInWatchlistDataChange);
+
+    this._filmDetailsComponent.setAddToWatchlistButtonClickHandler(onInWatchlistDataChange);
+
+    this._movieCardComponent.setMarkAsWatchedButtonClickHandler(onWatchedDataChange);
+
+    this._filmDetailsComponent.setMarkAsWatchedButtonClickHandler(onWatchedDataChange);
+
+    this._movieCardComponent.setMarkAsFavoriteButtonClickHandler(onFavoriteDataChange);
+
+    this._filmDetailsComponent.setMarkAsFavoriteButtonClickHandler(onFavoriteDataChange);
 
     if (oldFilm && oldFilmDetails) {
       replace(this._movieCardComponent, oldFilm);

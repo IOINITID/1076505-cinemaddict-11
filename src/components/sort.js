@@ -1,4 +1,4 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
 export const SortType = {
   DATE: `date`,

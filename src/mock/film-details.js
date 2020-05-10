@@ -35,11 +35,9 @@ export const generateFilmDetails = () => {
     genres: FILM_DETAILS_GENRES,
     description: generateFilmDetailsItems(FILM_DETAILS_DESCRIPTIONS, 6),
     comments: generateFilmsComments(getRandomIntegerNumber(0, 6)),
-    state: {
-      inWatchlist: Math.random() > 0.5,
-      watched: Math.random() > 0.5,
-      favorite: Math.random() > 0.5,
-    }
+    inWatchlist: Math.random() > 0.5,
+    watched: Math.random() > 0.5,
+    favorite: Math.random() > 0.5,
   };
 };
 
