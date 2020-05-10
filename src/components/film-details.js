@@ -184,6 +184,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._filmDetails = filmDetails;
     this._setPopupCloseButtonClick = null;
     this._removePopupCloseButtonClick = null;
+    this._setAddToWatchlistButtonClickHandler = null;
+    this._setMarkAsWatchedButtonClickHandler = null;
+    this._setMarkAsFavoriteButtonClickHandler = null;
 
     this._inWatchlist = filmDetails.inWatchlist;
     this._watched = filmDetails.watched;
