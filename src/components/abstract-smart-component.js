@@ -8,6 +8,7 @@ export default class AbstractSmartComponent extends AbstractComponent {
       throw new Error(`Can't instantiate AbstractSmartComponent, only concrete one.`);
     }
   }
+
   recoveryListeners() {
     throw new Error(`Abstract method not implemented: recoveryListeners`);
   }

@@ -1,4 +1,4 @@
-import AbstractSmartComponent from "../components/abstract-smart-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 import {MONTH_NAMES} from "../const";
 
 const createFilmDetails = (filmDetails) => {
@@ -192,10 +192,17 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
+  getTemplate() {
+    return createFilmDetails(this._filmDetails);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
   recoveryListeners() {
     this.setPopupCloseButtonClick(this._setPopupCloseButtonClick);
     this.removePopupCloseButtonClick(this._removePopupCloseButtonClick);
-
     this.setAddToWatchlistButtonClickHandler(this._setAddToWatchlistButtonClickHandler);
     this.setMarkAsWatchedButtonClickHandler(this._setMarkAsWatchedButtonClickHandler);
     this.setMarkAsFavoriteButtonClickHandler(this._setMarkAsFavoriteButtonClickHandler);
@@ -203,12 +210,14 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  rerender() {
-    super.rerender();
+  setPopupCloseButtonClick(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._setPopupCloseButtonClick = handler;
   }
 
-  getTemplate() {
-    return createFilmDetails(this._filmDetails);
+  removePopupCloseButtonClick(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
+    this._removePopupCloseButtonClick = handler;
   }
 
   setAddToWatchlistButtonClickHandler(handler) {
@@ -226,31 +235,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._setMarkAsFavoriteButtonClickHandler = handler;
   }
 
-  reset() {
-    const filmDetails = this._filmDetails;
-
-    this._inWatchlist = !!filmDetails.inWatchlist;
-    this._watched = !!filmDetails.watched;
-    this._favorite = !!filmDetails.favorite;
-
-    this.rerender();
-  }
-
-  setPopupCloseButtonClick(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
-    this._setPopupCloseButtonClick = handler;
-  }
-
-  removePopupCloseButtonClick(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
-    this._removePopupCloseButtonClick = handler;
-  }
-
   _subscribeOnEvents() {
-    const element = this.getElement();
-
-    const emojiContainer = element.querySelector(`.film-details__add-emoji-label`);
-    const emoji = element.querySelectorAll(`.film-details__emoji-item`);
+    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    const emoji = this.getElement().querySelectorAll(`.film-details__emoji-item`);
 
     emoji.forEach((item) => {
       item.addEventListener(`change`, () => {
