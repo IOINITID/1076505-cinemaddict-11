@@ -182,12 +182,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
 
     this._filmDetails = filmDetails;
-    this._setPopupCloseButtonClick = null;
-    this._removePopupCloseButtonClick = null;
-    this._setAddToWatchlistButtonClickHandler = null;
-    this._setMarkAsWatchedButtonClickHandler = null;
-    this._setMarkAsFavoriteButtonClickHandler = null;
-    this._currentEmoji = null;
 
     this._setEmoji();
   }
@@ -242,13 +236,11 @@ export default class FilmDetails extends AbstractSmartComponent {
         emojiImage.height = 55;
         emojiImage.alt = `emoji-${item.value}`;
 
-        this._currentEmoji = emojiImage;
-
         if (emojiContainer.firstChild && emojiContainer.firstChild.tagName === `IMG`) {
           emojiContainer.innerHTML = ``;
         }
 
-        emojiContainer.appendChild(this._currentEmoji);
+        emojiContainer.appendChild(emojiImage);
       });
     });
   }
