@@ -187,11 +187,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._setAddToWatchlistButtonClickHandler = null;
     this._setMarkAsWatchedButtonClickHandler = null;
     this._setMarkAsFavoriteButtonClickHandler = null;
-
-    this._inWatchlist = filmDetails.inWatchlist;
-    this._watched = filmDetails.watched;
-    this._favorite = filmDetails.favorite;
-
     this._currentEmoji = null;
 
     this._setEmoji();
