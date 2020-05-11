@@ -1,6 +1,5 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
-// Возвращает разметку блока фильмы
 const createMovieMostCommentedTemplate = () => {
   return (
     `<section class="films-list--extra">
@@ -11,7 +10,6 @@ const createMovieMostCommentedTemplate = () => {
   );
 };
 
-// Класс фильмы из раздела дополнительно
 export default class MovieMostCommented extends AbstractComponent {
   getTemplate() {
     return createMovieMostCommentedTemplate();

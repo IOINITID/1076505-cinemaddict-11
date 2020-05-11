@@ -1,4 +1,7 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common";
+import {
+  getRandomIntegerNumber,
+  getRandomArrayItem
+} from "../utils/common";
 import {
   FILM_DETAILS_DESCRIPTIONS,
   FILM_DETAILS_TITLES,
@@ -13,7 +16,6 @@ import {
   COMMENT_AUTHORS,
 } from "../const";
 
-// Возвращет подробное описанием фильма
 export const generateFilmDetails = () => {
   return {
     title: getRandomArrayItem(FILM_DETAILS_TITLES),
@@ -33,35 +35,30 @@ export const generateFilmDetails = () => {
     genres: FILM_DETAILS_GENRES,
     description: generateFilmDetailsItems(FILM_DETAILS_DESCRIPTIONS, 6),
     comments: generateFilmsComments(getRandomIntegerNumber(0, 6)),
-    state: {
-      inWatchlist: Math.random() > 0.5,
-      watched: Math.random() > 0.5,
-      favorite: Math.random() > 0.5,
-    }
+    inWatchlist: Math.random() > 0.5,
+    watched: Math.random() > 0.5,
+    favorite: Math.random() > 0.5,
   };
 };
 
-// Возвращает список подробных описаний фильмов
 export const generateFilmsDetails = (count) => {
   return new Array(count).fill(``).map(generateFilmDetails);
 };
 
-// Возвращает комметарий к фильму
 export const generateFilmComments = () => {
   return {
     emoji: getRandomArrayItem(EMOJI_NAMES),
     text: getRandomArrayItem(COMMENT_TEXT),
     author: getRandomArrayItem(COMMENT_AUTHORS),
     date: getCurrentFilmDetailsDate(),
+    currentEmoji: null,
   };
 };
 
-// Возвращает список комментариев к фильму
 export const generateFilmsComments = (count) => {
   return new Array(count).fill(``).map(generateFilmComments);
 };
 
-// Возвращает случайное количество элементов списка
 const generateFilmDetailsItems = (items, count, devider = ` `) => {
   let item = new Set();
   let itemCount = getRandomIntegerNumber(1, count);
@@ -74,9 +71,9 @@ const generateFilmDetailsItems = (items, count, devider = ` `) => {
   return [...item].join(devider);
 };
 
-// Возвращает текущую дату
 const getCurrentFilmDetailsDate = () => {
   const date = new Date();
+
   return {
     day: date.getDate(),
     month: date.getMonth(),

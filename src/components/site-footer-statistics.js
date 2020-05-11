@@ -1,18 +1,16 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
-// Возвращает разметку блока статистика
-const createSiteFooterStatisctics = (FILMS_COUNT) => {
+const createSiteFooterStatisctics = (filmsCount) => {
   return (
-    `<p>${FILMS_COUNT} movies inside</p>`
+    `<p>${filmsCount} movies inside</p>`
   );
 };
 
-// Класс статистика
 export default class SiteFooterStatisctics extends AbstractComponent {
-  constructor(FILMS_COUNT) {
+  constructor(filmsCount) {
     super();
 
-    this._filmsCount = FILMS_COUNT;
+    this._filmsCount = filmsCount;
   }
 
   getTemplate() {

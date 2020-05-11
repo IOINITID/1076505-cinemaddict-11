@@ -1,6 +1,5 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
-// Возвращает разметку блока фильмы
 const createMoviesTemplate = () => {
   return (
     `<section class="films">
@@ -13,7 +12,6 @@ const createMoviesTemplate = () => {
   );
 };
 
-// Класс фильмы
 export default class Movies extends AbstractComponent {
   getTemplate() {
     return createMoviesTemplate();

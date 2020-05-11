@@ -1,6 +1,5 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
-// Возвращает разметку блока меню
 const createSiteMenu = () => {
   return (
     `<nav class="main-navigation">
@@ -15,7 +14,6 @@ const createSiteMenu = () => {
   );
 };
 
-// Класс меню
 export default class SiteMenu extends AbstractComponent {
   getTemplate() {
     return createSiteMenu();

@@ -1,4 +1,4 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
 const createNoMoviesTemplate = () => {
   return (
@@ -10,7 +10,6 @@ const createNoMoviesTemplate = () => {
   );
 };
 
-// Класс фильмы
 export default class NoMovies extends AbstractComponent {
   getTemplate() {
     return createNoMoviesTemplate();

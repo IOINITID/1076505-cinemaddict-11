@@ -1,12 +1,10 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractSmartComponent from "./abstract-smart-component";
 import {MONTH_NAMES} from "../const";
 
-// Возвращает разметку блока подробного описания фильма
 const createFilmDetails = (filmDetails) => {
-  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, state} = filmDetails;
+  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, inWatchlist, watched, favorite} = filmDetails;
   const posterDetails = {image, age};
   const infoDetails = {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description};
-  const {inWatchlist, watched, favorite} = state;
 
   return (
     `<section class="film-details">
@@ -44,7 +42,6 @@ const createFilmDetails = (filmDetails) => {
 </section>`);
 };
 
-// Возвращает разметку блока с обложкой фильма и рейтингом
 const createFilmDetailsPoster = (details) => {
   const {image, age} = details;
 
@@ -57,7 +54,6 @@ const createFilmDetailsPoster = (details) => {
   );
 };
 
-// Возвращает разметку блока с информацией о фильме
 const createFilmDetailsInfo = (info) => {
   const {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description} = info;
   const {hours, minutes} = runtime;
@@ -118,9 +114,7 @@ const createFilmDetailsInfo = (info) => {
   );
 };
 
-// Возвращает разметку блока с коментариями
 const createFilmDetailsComments = (comments) => {
-  // Возвращает разметку с комментариями. Не уверен на счет этой записи
   const getComments = () => {
     return comments.map((comment) => {
       const {emoji, text, author, date} = comment;
@@ -183,23 +177,79 @@ const createFilmDetailsComments = (comments) => {
   );
 };
 
-// Класс подробное описание фильма
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(filmDetails) {
     super();
 
     this._filmDetails = filmDetails;
+    this._setPopupCloseButtonClick = null;
+    this._removePopupCloseButtonClick = null;
+    this._setAddToWatchlistButtonClickHandler = null;
+    this._setMarkAsWatchedButtonClickHandler = null;
+    this._setMarkAsFavoriteButtonClickHandler = null;
+    this._currentEmoji = null;
+
+    this._setEmoji();
   }
 
   getTemplate() {
     return createFilmDetails(this._filmDetails);
   }
 
-  setPopupCloseButtonClick(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+  rerender() {
+    super.rerender();
   }
 
-  removePopupCloseButtonClick(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
+  recoveryListeners() {
+    this.setPopupCloseButtonClick(this._setPopupCloseButtonClick);
+    this.setAddToWatchlistButtonClickHandler(this._setAddToWatchlistButtonClickHandler);
+    this.setMarkAsWatchedButtonClickHandler(this._setMarkAsWatchedButtonClickHandler);
+    this.setMarkAsFavoriteButtonClickHandler(this._setMarkAsFavoriteButtonClickHandler);
+
+    this._setEmoji();
+  }
+
+  setPopupCloseButtonClick(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._setPopupCloseButtonClick = handler;
+  }
+
+  setAddToWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this._setAddToWatchlistButtonClickHandler = handler;
+  }
+
+  setMarkAsWatchedButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this._setMarkAsWatchedButtonClickHandler = handler;
+  }
+
+  setMarkAsFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this._setMarkAsFavoriteButtonClickHandler = handler;
+  }
+
+  _setEmoji() {
+    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    const emoji = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+    emoji.forEach((item) => {
+      item.addEventListener(`change`, () => {
+        const emojiImage = document.createElement(`img`);
+
+        emojiImage.src = `images/emoji/${item.value}.png`;
+        emojiImage.width = 55;
+        emojiImage.height = 55;
+        emojiImage.alt = `emoji-${item.value}`;
+
+        this._currentEmoji = emojiImage;
+
+        if (emojiContainer.firstChild && emojiContainer.firstChild.tagName === `IMG`) {
+          emojiContainer.innerHTML = ``;
+        }
+
+        emojiContainer.appendChild(this._currentEmoji);
+      });
+    });
   }
 }

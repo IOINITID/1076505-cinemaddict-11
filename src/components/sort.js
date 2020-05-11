@@ -1,4 +1,4 @@
-import AbstractComponent from "../components/abstract-components";
+import AbstractComponent from "./abstract-component";
 
 export const SortType = {
   DATE: `date`,
@@ -6,7 +6,6 @@ export const SortType = {
   DEFAULT: `default`,
 };
 
-// Возвращает разметку блока сортировка
 const createSortList = () => {
   return (
     `<ul class="sort">
@@ -17,7 +16,6 @@ const createSortList = () => {
   );
 };
 
-// Класс сортировка
 export default class Sort extends AbstractComponent {
   constructor() {
     super();
