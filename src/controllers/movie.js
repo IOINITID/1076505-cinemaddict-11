@@ -113,4 +113,5 @@ export default class MovieController {
       this._removeFilmDetails();
     }
   }
+
 }
