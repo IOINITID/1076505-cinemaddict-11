@@ -51,6 +51,7 @@ export const generateFilmComments = () => {
     text: getRandomArrayItem(COMMENT_TEXT),
     author: getRandomArrayItem(COMMENT_AUTHORS),
     date: getCurrentFilmDetailsDate(),
+    currentEmoji: null,
   };
 };
 

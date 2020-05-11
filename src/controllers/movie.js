@@ -63,6 +63,8 @@ export default class MovieController {
     this._movieCardComponent.setMarkAsFavoriteButtonClickHandler(onFavoriteDataChange);
     this._filmDetailsComponent.setMarkAsFavoriteButtonClickHandler(onFavoriteDataChange);
 
+    this._filmDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
+
     if (oldFilm && oldFilmDetails) {
       replace(this._movieCardComponent, oldFilm);
       replace(this._filmDetailsComponent, oldFilmDetails);
@@ -73,10 +75,15 @@ export default class MovieController {
     const filmPoster = this._movieCardComponent.getElement().querySelector(`.film-card__poster`);
     const filmTitle = this._movieCardComponent.getElement().querySelector(`.film-card__title`);
     const filmComments = this._movieCardComponent.getElement().querySelector(`.film-card__comments`);
-    const filmElements = [filmPoster, filmTitle, filmComments];
 
-    filmElements.forEach((element) => {
-      this._renderFilmDetails(element);
+    [filmPoster, filmTitle, filmComments].forEach((element) => {
+      element.addEventListener(`click`, () => {
+        this._onViewChange();
+        this._mode = Mode.OPEN;
+        this._filmDetailsComponent.rerender();
+        renderComponent(this._footerElement, this._filmDetailsComponent, RenderPosition.AFTEREND);
+        document.addEventListener(`keydown`, this._onPopupEscButtonKeydown);
+      });
     });
   }
 
@@ -86,20 +93,8 @@ export default class MovieController {
     }
   }
 
-  _renderFilmDetails(element) {
-    element.addEventListener(`click`, () => {
-      this._onViewChange();
-      this._mode = Mode.OPEN;
-      this._filmDetailsComponent.rerender();
-      renderComponent(this._footerElement, this._filmDetailsComponent, RenderPosition.AFTEREND);
-      this._filmDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
-      document.addEventListener(`keydown`, this._onPopupEscButtonKeydown);
-    });
-  }
-
   _removeFilmDetails() {
     remove(this._filmDetailsComponent);
-    this._filmDetailsComponent.removePopupCloseButtonClick(this._onPopupCloseButtonClick);
     document.removeEventListener(`keydown`, this._onPopupEscButtonKeydown);
   }
 

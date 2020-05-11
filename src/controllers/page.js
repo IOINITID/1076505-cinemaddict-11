@@ -77,9 +77,7 @@ export default class PageController {
     renderComponent(this._container, this._moviesComponent, RenderPosition.BEFOREEND);
 
     const filmsElement = this._container.querySelector(`.films`);
-
     const filmsListElement = filmsElement.querySelector(`.films-list`);
-
     const filmsListContainer = filmsListElement.querySelector(`.films-list__container`);
 
     const newFilms = renderFilms(filmsListContainer, this._filmDetais.slice(0, this._showingMovieCardCount), this._onDataChange, this._onViewChange);
@@ -89,17 +87,13 @@ export default class PageController {
     this._renderShowMoreButton();
 
     renderComponent(filmsElement, this._movieTopRated, RenderPosition.BEFOREEND);
-
     renderComponent(filmsElement, this._movieMostCommented, RenderPosition.BEFOREEND);
 
     const filmsExtraElement = filmsElement.querySelectorAll(`.films-list--extra`);
-
     const filmsListTopRatedContainer = filmsExtraElement[0].querySelector(`.films-list__container`);
-
     const filmsListMostCommentedContainer = filmsExtraElement[1].querySelector(`.films-list__container`);
 
     renderFilms(filmsListTopRatedContainer, filmDetails.slice(0, MOVIE_CARD_EXTRA_COUNT));
-
     renderFilms(filmsListMostCommentedContainer, filmDetails.slice(0, MOVIE_CARD_EXTRA_COUNT));
   }
 
@@ -109,9 +103,7 @@ export default class PageController {
     }
 
     const filmsElement = this._container.querySelector(`.films`);
-
     const filmsListElement = filmsElement.querySelector(`.films-list`);
-
     const filmsListContainer = filmsListElement.querySelector(`.films-list__container`);
 
     renderComponent(filmsListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
@@ -155,9 +147,7 @@ export default class PageController {
     const sortedFilms = getSortedFilms(this._filmDetais, sortType, 0, this._showingMovieCardCount);
 
     const filmsElement = this._container.querySelector(`.films`);
-
     const filmsListElement = filmsElement.querySelector(`.films-list`);
-
     const filmsListContainer = filmsListElement.querySelector(`.films-list__container`);
 
     filmsListContainer.innerHTML = ``;

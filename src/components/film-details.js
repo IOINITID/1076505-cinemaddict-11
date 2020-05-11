@@ -192,7 +192,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._watched = filmDetails.watched;
     this._favorite = filmDetails.favorite;
 
-    this._subscribeOnEvents();
+    this._currentEmoji = null;
+
+    this._setEmoji();
   }
 
   getTemplate() {
@@ -205,22 +207,16 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setPopupCloseButtonClick(this._setPopupCloseButtonClick);
-    this.removePopupCloseButtonClick(this._removePopupCloseButtonClick);
     this.setAddToWatchlistButtonClickHandler(this._setAddToWatchlistButtonClickHandler);
     this.setMarkAsWatchedButtonClickHandler(this._setMarkAsWatchedButtonClickHandler);
     this.setMarkAsFavoriteButtonClickHandler(this._setMarkAsFavoriteButtonClickHandler);
 
-    this._subscribeOnEvents();
+    this._setEmoji();
   }
 
   setPopupCloseButtonClick(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
     this._setPopupCloseButtonClick = handler;
-  }
-
-  removePopupCloseButtonClick(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
-    this._removePopupCloseButtonClick = handler;
   }
 
   setAddToWatchlistButtonClickHandler(handler) {
@@ -238,7 +234,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._setMarkAsFavoriteButtonClickHandler = handler;
   }
 
-  _subscribeOnEvents() {
+  _setEmoji() {
     const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
     const emoji = this.getElement().querySelectorAll(`.film-details__emoji-item`);
 
@@ -251,11 +247,13 @@ export default class FilmDetails extends AbstractSmartComponent {
         emojiImage.height = 55;
         emojiImage.alt = `emoji-${item.value}`;
 
+        this._currentEmoji = emojiImage;
+
         if (emojiContainer.firstChild && emojiContainer.firstChild.tagName === `IMG`) {
           emojiContainer.innerHTML = ``;
         }
 
-        emojiContainer.appendChild(emojiImage);
+        emojiContainer.appendChild(this._currentEmoji);
       });
     });
   }
