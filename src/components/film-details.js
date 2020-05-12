@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {MONTH_NAMES} from "../const";
+import moment from "moment";
 
 const createFilmDetails = (filmDetails) => {
   const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, inWatchlist, watched, favorite} = filmDetails;
@@ -56,8 +56,8 @@ const createFilmDetailsPoster = (details) => {
 
 const createFilmDetailsInfo = (info) => {
   const {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description} = info;
-  const {hours, minutes} = runtime;
-  const {day, month, year} = releaseDate;
+  const filmReleaseDate = moment(releaseDate).format(`DD MMMM YYYY`);
+  const filmRuntime = moment(runtime).format(`h[h] mm[m]`);
   const getGenres = () => {
     return genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(`\n`);
   };
@@ -90,11 +90,11 @@ const createFilmDetailsInfo = (info) => {
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Release Date</td>
-      <td class="film-details__cell">${day} ${MONTH_NAMES[month]} ${year}</td>
+      <td class="film-details__cell">${filmReleaseDate}</td>
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Runtime</td>
-      <td class="film-details__cell">${hours}h ${minutes}m</td>
+      <td class="film-details__cell">${filmRuntime}</td>
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Country</td>
@@ -118,7 +118,7 @@ const createFilmDetailsComments = (comments) => {
   const getComments = () => {
     return comments.map((comment) => {
       const {emoji, text, author, date} = comment;
-      const {day, month, year, hours, minutes} = date;
+      const commentDate = moment(date).format(`YYYY/MM/DD hh:mm`);
 
       return (`<li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -128,7 +128,7 @@ const createFilmDetailsComments = (comments) => {
         <p class="film-details__comment-text">${text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${year}/${month}/${day} ${hours}:${minutes}</span>
+          <span class="film-details__comment-day">${commentDate}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -182,12 +182,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
 
     this._filmDetails = filmDetails;
-    this._setPopupCloseButtonClick = null;
-    this._removePopupCloseButtonClick = null;
-    this._setAddToWatchlistButtonClickHandler = null;
-    this._setMarkAsWatchedButtonClickHandler = null;
-    this._setMarkAsFavoriteButtonClickHandler = null;
-    this._currentEmoji = null;
 
     this._setEmoji();
   }
@@ -242,13 +236,11 @@ export default class FilmDetails extends AbstractSmartComponent {
         emojiImage.height = 55;
         emojiImage.alt = `emoji-${item.value}`;
 
-        this._currentEmoji = emojiImage;
-
         if (emojiContainer.firstChild && emojiContainer.firstChild.tagName === `IMG`) {
           emojiContainer.innerHTML = ``;
         }
 
-        emojiContainer.appendChild(this._currentEmoji);
+        emojiContainer.appendChild(emojiImage);
       });
     });
   }

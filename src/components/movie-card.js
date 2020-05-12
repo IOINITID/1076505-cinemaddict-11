@@ -1,9 +1,10 @@
 import AbstractComponent from "./abstract-component";
+import moment from "moment";
 
 const createMovieCard = (filmDetails) => {
   const {image, title, rating, releaseDate, runtime, description, genres, comments, inWatchlist, watched, favorite} = filmDetails;
-  const {year} = releaseDate;
-  const {hours, minutes} = runtime;
+  const filmReleaseDate = moment(releaseDate).format(`YYYY`);
+  const filmRuntime = moment(runtime).format(`h[h] mm[m]`);
   const getGenres = () => {
     return genres.map((genre) => genre).join(`, `);
   };
@@ -13,8 +14,8 @@ const createMovieCard = (filmDetails) => {
           <h3 class="film-card__title">${title}</h3>
           <p class="film-card__rating">${rating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${year}</span>
-            <span class="film-card__duration">${hours}h ${minutes}m</span>
+            <span class="film-card__year">${filmReleaseDate}</span>
+            <span class="film-card__duration">${filmRuntime}</span>
             <span class="film-card__genre">${getGenres()}</span>
           </p>
           <img src="./images/posters/${image}" alt="" class="film-card__poster">
