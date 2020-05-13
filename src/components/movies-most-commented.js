@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-const createMovieMostCommentedTemplate = () => {
+const createMoviesMostCommentedTemplate = () => {
   return (
     `<section class="films-list--extra">
     <h2 class="films-list__title">Most commented</h2>
@@ -10,8 +10,8 @@ const createMovieMostCommentedTemplate = () => {
   );
 };
 
-export default class MovieMostCommented extends AbstractComponent {
+export default class MoviesMostCommented extends AbstractComponent {
   getTemplate() {
-    return createMovieMostCommentedTemplate();
+    return createMoviesMostCommentedTemplate();
   }
 }

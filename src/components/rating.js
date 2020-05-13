@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-const createUserRank = () => {
+const createRatingTemplate = () => {
   return (
     `<section class="header__profile profile">
       <p class="profile__rating">Sci-Fighter</p>
@@ -9,8 +9,8 @@ const createUserRank = () => {
   );
 };
 
-export default class UserRank extends AbstractComponent {
+export default class Rating extends AbstractComponent {
   getTemplate() {
-    return createUserRank();
+    return createRatingTemplate();
   }
 }

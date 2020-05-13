@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-const createShowMoreButton = () => {
+const createShowMoreButtonTemplate = () => {
   return (
     `<button class="films-list__show-more">Show more</button>`
   );
@@ -8,7 +8,7 @@ const createShowMoreButton = () => {
 
 export default class ShowMoreButton extends AbstractComponent {
   getTemplate() {
-    return createShowMoreButton();
+    return createShowMoreButtonTemplate();
   }
 
   setClickHandler(handler) {

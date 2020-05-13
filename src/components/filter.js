@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-const createSiteMenu = () => {
+const createFilterTemplate = () => {
   return (
     `<nav class="main-navigation">
     <div class="main-navigation__items">
@@ -14,8 +14,8 @@ const createSiteMenu = () => {
   );
 };
 
-export default class SiteMenu extends AbstractComponent {
+export default class Filter extends AbstractComponent {
   getTemplate() {
-    return createSiteMenu();
+    return createFilterTemplate();
   }
 }
