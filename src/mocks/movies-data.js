@@ -18,6 +18,7 @@ import {
 
 export const generateMovieData = () => {
   return {
+    id: String(new Date() + Math.random()),
     title: getRandomArrayItem(FILM_DETAILS_TITLES),
     originalTitle: getRandomArrayItem(FILM_DETAILS_TITLES),
     rating: (Math.random() * 10).toFixed(1),

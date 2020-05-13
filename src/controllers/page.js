@@ -27,7 +27,7 @@ const getSortedMovies = (moviesData, sortType, from, to) => {
 
   switch (sortType) {
     case SortType.DATE:
-      sortedMovies = showingMovies.sort((a, b) => b.releaseDate.year - a.releaseDate.year);
+      sortedMovies = showingMovies.sort((a, b) => b.releaseDate.getFullYear() - a.releaseDate.getFullYear());
       break;
     case SortType.RATING:
       sortedMovies = showingMovies.sort((a, b) => b.rating - a.rating);
@@ -41,8 +41,9 @@ const getSortedMovies = (moviesData, sortType, from, to) => {
 };
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, moviesModel) {
     this._container = container;
+    this._moviesModel = moviesModel;
 
     this._moviesData = [];
     this._showedMovieControllers = [];
@@ -62,12 +63,12 @@ export default class PageController {
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
-  render(moviesData) {
-    this._moviesData = moviesData;
+  render() {
+    const moviesData = this._moviesModel.getMovies();
 
     render(this._container, this._sortingComponent, RenderPosition.BEFOREEND);
 
-    const isMoviesData = !!this._moviesData.length;
+    const isMoviesData = !!moviesData.length;
 
     if (!isMoviesData) {
       render(this._container, this._noMoviesComponent, RenderPosition.BEFOREEND);
@@ -77,30 +78,39 @@ export default class PageController {
     render(this._container, this._moviesComponent, RenderPosition.BEFOREEND);
 
     const moviesElement = this._container.querySelector(`.films`);
-    const moviesListElement = moviesElement.querySelector(`.films-list`);
-    const moviesListContainer = moviesListElement.querySelector(`.films-list__container`);
 
-    const newMovies = renderMovies(moviesListContainer, this._moviesData.slice(0, this._moviesQuantityToShow), this._onDataChange, this._onViewChange);
-
-    this._showedMovieControllers = this._showedMovieControllers.concat(newMovies);
-
+    this._renderMovies(moviesData.slice(0, this._moviesQuantityToShow));
     this._renderShowMoreButton();
 
     render(moviesElement, this._moviesTopRated, RenderPosition.BEFOREEND);
     render(moviesElement, this._moviesMostCommented, RenderPosition.BEFOREEND);
 
+    this._renderMoviesExtra(moviesData);
+  }
+
+  _renderMovies(moviesData) {
+    const moviesElement = this._container.querySelector(`.films`);
+    const moviesListElement = moviesElement.querySelector(`.films-list`);
+    const moviesListContainer = moviesListElement.querySelector(`.films-list__container`);
+
+    const newMovies = renderMovies(moviesListContainer, moviesData, this._onDataChange, this._onViewChange);
+
+    this._showedMovieControllers = this._showedMovieControllers.concat(newMovies);
+    this._moviesQuantityToShow = this._showedMovieControllers.length;
+  }
+
+  _renderMoviesExtra(moviesData) {
+    const moviesElement = this._container.querySelector(`.films`);
     const moviesExtraElement = moviesElement.querySelectorAll(`.films-list--extra`);
     const moviesListTopRatedContainer = moviesExtraElement[0].querySelector(`.films-list__container`);
     const moviesListMostCommentedContainer = moviesExtraElement[1].querySelector(`.films-list__container`);
 
-    renderMovies(moviesListTopRatedContainer, this._moviesData.slice(0, MOVIES_EXTRA_QUANTITY));
-    renderMovies(moviesListMostCommentedContainer, this._moviesData.slice(0, MOVIES_EXTRA_QUANTITY));
+    renderMovies(moviesListTopRatedContainer, moviesData.slice(0, MOVIES_EXTRA_QUANTITY), this._onDataChange, this._onViewChange);
+    renderMovies(moviesListMostCommentedContainer, moviesData.slice(0, MOVIES_EXTRA_QUANTITY), this._onDataChange, this._onViewChange);
   }
 
   _renderShowMoreButton() {
-    if (this._moviesQuantityToShow >= this._moviesData.length) {
-      return;
-    }
+    remove(this._showMoreButtonComponent);
 
     const moviesElement = this._container.querySelector(`.films`);
     const moviesListElement = moviesElement.querySelector(`.films-list`);
@@ -110,31 +120,27 @@ export default class PageController {
 
     this._showMoreButtonComponent.setClickHandler(() => {
       const previousMovieQuantity = this._moviesQuantityToShow;
+      const moviesData = this._moviesModel.getMovies();
 
       this._moviesQuantityToShow = this._moviesQuantityToShow + MOVIES_QUANTITY_BY_BUTTON;
 
-      const sortedMovies = getSortedMovies(this._moviesData, this._sortingComponent.getSortType(), previousMovieQuantity, this._moviesQuantityToShow);
-
+      const sortedMovies = getSortedMovies(moviesData, this._sortingComponent.getSortType(), previousMovieQuantity, this._moviesQuantityToShow);
       const newMovies = renderMovies(moviesListContainer, sortedMovies, this._onDataChange, this._onViewChange);
 
       this._showedMovieControllers = this._showedMovieControllers.concat(newMovies);
 
-      if (this._moviesQuantityToShow >= this._moviesData.length) {
+      if (this._moviesQuantityToShow >= this._moviesModel.getMovies().length) {
         remove(this._showMoreButtonComponent);
       }
     });
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const index = this._moviesData.findIndex((movieData) => movieData === oldData);
+    const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      movieController.render(newData);
     }
-
-    this._moviesData = [].concat(this._moviesData.slice(0, index), newData, this._moviesData.slice(index + 1));
-
-    movieController.render(this._moviesData[index]);
   }
 
   _onViewChange() {
@@ -144,7 +150,7 @@ export default class PageController {
   _onSortTypeChange(sortType) {
     this._moviesQuantityToShow = MOVIES_QUANTITY_ON_START;
 
-    const sortedMovies = getSortedMovies(this._moviesData, sortType, 0, this._moviesQuantityToShow);
+    const sortedMovies = getSortedMovies(this._moviesModel.getMovies(), sortType, 0, this._moviesQuantityToShow);
 
     const moviesElement = this._container.querySelector(`.films`);
     const moviesListElement = moviesElement.querySelector(`.films-list`);
