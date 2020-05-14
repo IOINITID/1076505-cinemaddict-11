@@ -7,3 +7,17 @@ export const getRandomArrayItem = (array) => {
 
   return array[randomIndex];
 };
+
+export const getFirstSymbolUpperCase = (filterName) => {
+  let filterNameUpperCase = ``;
+
+  for (let i = 0; i < filterName.length; i++) {
+    if (i === 0) {
+      filterNameUpperCase += filterName[i].toUpperCase();
+    } else {
+      filterNameUpperCase += filterName[i];
+    }
+  }
+
+  return filterNameUpperCase;
+};

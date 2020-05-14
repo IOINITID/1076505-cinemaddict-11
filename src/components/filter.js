@@ -1,21 +1,45 @@
 import AbstractComponent from "./abstract-component";
+import {getFirstSymbolUpperCase} from "../utils/common";
 
-const createFilterTemplate = () => {
+const createFilterTemplate = (filters) => {
+  const filterElements = filters.map((filterElement) => createFilterElementTemplate(filterElement)).join(`\n`);
+
   return (
     `<nav class="main-navigation">
     <div class="main-navigation__items">
-      <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-      <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-      <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-      <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
+      ${filterElements}
     </div>
     <a href="#stats" class="main-navigation__additional">Stats</a>
   </nav>`
   );
 };
 
+const createFilterElementTemplate = (filter) => {
+  const {title, quantity, checked} = filter;
+  const activeFilterElement = checked ? `main-navigation__item--active` : ``;
+  const filterTitle = title === `all` ? `All movies` : getFirstSymbolUpperCase(title);
+
+  return (
+    `<a href="#${title}" id="${title}" class="main-navigation__item ${activeFilterElement}">${filterTitle} <span class="main-navigation__item-count">${quantity}</span></a>`
+  );
+};
+
 export default class Filter extends AbstractComponent {
+  constructor(filters) {
+    super();
+
+    this._filters = filters;
+  }
+
   getTemplate() {
-    return createFilterTemplate();
+    return createFilterTemplate(this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      handler(evt.target.id);
+    });
   }
 }

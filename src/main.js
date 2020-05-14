@@ -1,5 +1,5 @@
 import RatingComponent from "./components/rating";
-import FilterComponent from "./components/filter";
+import FilterController from "./controllers/filter";
 import StatisticsComponent from "./components/statistics";
 import PageController from "./controllers/page";
 import MoviesModel from "./models/movies";
@@ -16,7 +16,9 @@ const moviesModel = new MoviesModel();
 moviesModel.setMovies(moviesData);
 
 render(headerElement, new RatingComponent(), RenderPosition.BEFOREEND);
-render(mainElement, new FilterComponent(), RenderPosition.BEFOREEND);
+
+const filterController = new FilterController(mainElement, moviesModel);
+filterController.render();
 
 const statisticsElement = document.querySelector(`.footer__statistics`);
 
