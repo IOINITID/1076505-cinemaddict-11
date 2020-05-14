@@ -59,6 +59,7 @@ export default class PageController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
@@ -121,25 +122,10 @@ export default class PageController {
 
     const moviesElement = this._container.querySelector(`.films`);
     const moviesListElement = moviesElement.querySelector(`.films-list`);
-    const moviesListContainer = moviesListElement.querySelector(`.films-list__container`);
 
     render(moviesListElement, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    this._showMoreButtonComponent.setClickHandler(() => {
-      const previousMovieQuantity = this._moviesQuantityToShow;
-      const moviesData = this._moviesModel.getMovies();
-
-      this._moviesQuantityToShow = this._moviesQuantityToShow + MOVIES_QUANTITY_BY_BUTTON;
-
-      const sortedMovies = getSortedMovies(moviesData, this._sortingComponent.getSortType(), previousMovieQuantity, this._moviesQuantityToShow);
-      const newMovies = renderMovies(moviesListContainer, sortedMovies, this._onDataChange, this._onViewChange);
-
-      this._showedMovieControllers = this._showedMovieControllers.concat(newMovies);
-
-      if (this._moviesQuantityToShow >= this._moviesModel.getMovies().length) {
-        remove(this._showMoreButtonComponent);
-      }
-    });
+    this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
   }
 
   _updateMovies(quantity) {
@@ -165,18 +151,27 @@ export default class PageController {
 
     const sortedMovies = getSortedMovies(this._moviesModel.getMovies(), sortType, 0, this._moviesQuantityToShow);
 
-    const moviesElement = this._container.querySelector(`.films`);
-    const moviesListElement = moviesElement.querySelector(`.films-list`);
-    const moviesListContainer = moviesListElement.querySelector(`.films-list__container`);
+    this._removeMovies();
 
-    moviesListContainer.innerHTML = ``;
-
-    const newMovies = renderMovies(moviesListContainer, sortedMovies, this._onDataChange, this._onViewChange);
-
-    this._showedMovieControllers = newMovies;
+    this._renderMovies(sortedMovies);
 
     if (!this._showMoreButtonComponent) {
       this._renderShowMoreButton();
+    }
+  }
+
+  _onShowMoreButtonClick() {
+    const previousMovieQuantity = this._moviesQuantityToShow;
+    const moviesData = this._moviesModel.getMovies();
+
+    this._moviesQuantityToShow = this._moviesQuantityToShow + MOVIES_QUANTITY_BY_BUTTON;
+
+    const sortedMovies = getSortedMovies(moviesData, this._sortingComponent.getSortType(), previousMovieQuantity, this._moviesQuantityToShow);
+
+    this._renderMovies(sortedMovies);
+
+    if (this._moviesQuantityToShow >= this._moviesModel.getMovies().length) {
+      remove(this._showMoreButtonComponent);
     }
   }
 
