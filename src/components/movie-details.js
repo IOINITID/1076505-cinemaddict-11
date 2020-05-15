@@ -126,7 +126,7 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
   return (
     `<section class="film-details__comments-wrap">
       <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${movieCommentsQuantity}</span></h3>
-      <ul class="film-details__comments-list">${getMovieComments()}</ul>
+      <ul class="film-details__comments-list">${movieCommentsQuantity ? getMovieComments() : ``}</ul>
       <div class="film-details__new-comment">
         <div for="add-emoji" class="film-details__add-emoji-label"></div>
         <label class="film-details__comment-label">
