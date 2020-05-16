@@ -94,6 +94,8 @@ export default class PageController {
   _removeMovies() {
     this._showedMovieControllers.forEach((movieController) => movieController.destroy());
     this._showedMovieControllers = [];
+
+    remove(this._showMoreButtonComponent);
   }
 
   _renderMovies(moviesData) {
@@ -128,20 +130,20 @@ export default class PageController {
     this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
   }
 
-  _updateMovies(quantity) {
+  _updateMovies() {
+    const allMovies = this._moviesModel.getMovies();
     this._removeMovies();
-    this._renderMovies(this._moviesModel.getMovies().slice(0, this._moviesQuantityToShow));
-    console.log(this._moviesQuantityToShow);
-    if (this._moviesQuantityToShow > MOVIES_QUANTITY_ON_START) {
+    this._renderMovies(allMovies.slice(0, this._moviesQuantityToShow));
+
+    if (allMovies.length > MOVIES_QUANTITY_ON_START) {
       this._renderShowMoreButton();
     }
   }
 
-  _onDataChange(movieController, oldData, newData) {
+  _onDataChange(oldData, newData) {
     const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
 
     if (isSuccess) {
-      // movieController.render(newData);
       this._updateMovies(this._moviesQuantityToShow);
     }
   }
@@ -170,8 +172,6 @@ export default class PageController {
 
     this._moviesQuantityToShow = this._moviesQuantityToShow + MOVIES_QUANTITY_BY_BUTTON;
 
-    console.log(this._moviesQuantityToShow);
-
     const sortedMovies = getSortedMovies(moviesData, this._sortingComponent.getSortType(), previousMovieQuantity, this._moviesQuantityToShow);
 
     this._renderMovies(sortedMovies);
@@ -182,6 +182,7 @@ export default class PageController {
   }
 
   _onFilterChange() {
-    this._updateMovies(MOVIES_QUANTITY_ON_START);
+    this._moviesQuantityToShow = MOVIES_QUANTITY_ON_START;
+    this._updateMovies();
   }
 }

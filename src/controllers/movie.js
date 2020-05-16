@@ -72,21 +72,21 @@ export default class MovieController {
 
   _onInWatchlistDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
+    this._onDataChange(this._movieData, Object.assign({}, this._movieData, {
       inWatchlist: !this._movieData.inWatchlist,
     }));
   }
 
   _onWatchedDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
+    this._onDataChange(this._movieData, Object.assign({}, this._movieData, {
       watched: !this._movieData.watched,
     }));
   }
 
   _onFavoriteDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
+    this._onDataChange(this._movieData, Object.assign({}, this._movieData, {
       favorite: !this._movieData.favorite,
     }));
   }
