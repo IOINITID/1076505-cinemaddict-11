@@ -60,6 +60,9 @@ export default class MovieController {
 
     this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
 
+    this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
+    this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
+
     if (oldMovie && oldMovieDetails) {
       replace(this._movieComponent, oldMovie);
       replace(this._movieDetailsComponent, oldMovieDetails);
