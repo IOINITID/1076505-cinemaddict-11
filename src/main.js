@@ -15,7 +15,7 @@ const moviesData = generateMoviesData(MOVIES_MAX_QUANTITY);
 const moviesModel = new MoviesModel();
 moviesModel.setMovies(moviesData);
 
-render(headerElement, new RatingComponent(), RenderPosition.BEFOREEND);
+render(headerElement, new RatingComponent(moviesData), RenderPosition.BEFOREEND);
 
 const filterController = new FilterController(mainElement, moviesModel);
 filterController.render();
