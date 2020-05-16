@@ -102,7 +102,7 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
   const movieCommentsQuantity = movieComments.length;
   const getMovieComments = () => {
     return movieComments.map((movieComment) => {
-      const {emoji, text, author, date} = movieComment;
+      const {id, emoji, text, author, date} = movieComment;
       const commentDate = moment(date).format(`YYYY/MM/DD hh:mm`);
 
       return (
@@ -115,7 +115,7 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
             <p class="film-details__comment-info">
               <span class="film-details__comment-author">${author}</span>
               <span class="film-details__comment-day">${commentDate}</span>
-              <button class="film-details__comment-delete">Delete</button>
+              <button id="${id}" class="film-details__comment-delete" data-id="${id}">Delete</button>
             </p>
           </div>
         </li>`
@@ -178,6 +178,8 @@ export default class MovieDetails extends AbstractSmartComponent {
     this.setMarkAsWatchedButtonClickHandler(this._setMarkAsWatchedButtonClickHandler);
     this.setMarkAsFavoriteButtonClickHandler(this._setMarkAsFavoriteButtonClickHandler);
 
+    // this.setSubmitHandler(this._setSubmitHandler);
+
     this._setEmoji();
   }
 
@@ -220,6 +222,25 @@ export default class MovieDetails extends AbstractSmartComponent {
 
         emojiContainer.appendChild(emojiImage);
       });
+    });
+  }
+
+  setCommentDeleteHandler(handler) {
+    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      if (evt.target.id === evt.target.dataset.id) {
+        handler(evt.target.dataset.id);
+      }
+    });
+  }
+
+  setSubmitHandler(handler) {
+    let form = this.getElement().querySelector(`.film-details__inner`);
+    form.addEventListener(`keydown`, (evt) => {
+      if (evt.ctrlKey && evt.key === `Enter`) {
+        evt.preventDefault();
+        handler(new FormData(form));
+      }
     });
   }
 }

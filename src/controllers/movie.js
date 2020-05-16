@@ -1,5 +1,6 @@
 import MovieComponent from "../components/movie";
 import MovieDetailsComponent from "../components/movie-details";
+import CommentsModel from "../models/comments";
 import {render, remove, replace, RenderPosition} from "../utils/render";
 
 const Mode = {
@@ -17,6 +18,8 @@ export default class MovieController {
 
     this._footerElement = document.querySelector(`.footer`);
 
+    this._commentsModel = new CommentsModel();
+
     this._movieComponent = null;
     this._movieDetailsComponent = null;
 
@@ -26,10 +29,19 @@ export default class MovieController {
     this._onInWatchlistDataChange = this._onInWatchlistDataChange.bind(this);
     this._onWatchedDataChange = this._onWatchedDataChange.bind(this);
     this._onFavoriteDataChange = this._onFavoriteDataChange.bind(this);
+
+    this._onCommentDelete = this._onCommentDelete.bind(this);
+    this._onCommentSubmit = this._onCommentSubmit.bind(this);
+
+    this._commentsModel.setDataChangeHandler(() => {
+      this._movieData.comments = this._commentsModel.getComments();
+      this.render(this._movieData);
+    });
   }
 
   render(movieData) {
     this._movieData = movieData;
+    this._commentsModel.setComments(this._movieData.comments);
 
     const oldMovie = this._movieComponent;
     const oldMovieDetails = this._movieDetailsComponent;
@@ -66,8 +78,26 @@ export default class MovieController {
         this._movieDetailsComponent.rerender();
         render(this._footerElement, this._movieDetailsComponent, RenderPosition.AFTEREND);
         document.addEventListener(`keydown`, this._onPopupEscButtonKeydown);
+        this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
+        this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
       });
     });
+  }
+
+  _onCommentSubmit(formData) {
+    const comment = {
+      id: String(new Date() + Math.random()),
+      emoji: formData.get(`comment-emoji`) || `smile`,
+      text: formData.get(`comment`),
+      author: `New author`,
+      date: new Date(),
+    };
+
+    this._commentsModel.createComment(comment);
+  }
+
+  _onCommentDelete(id) {
+    this._commentsModel.deleteComment(id);
   }
 
   _onInWatchlistDataChange(evt) {

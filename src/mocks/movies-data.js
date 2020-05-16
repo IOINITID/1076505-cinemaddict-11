@@ -45,6 +45,7 @@ export const generateMoviesData = (quantity) => {
 
 export const generateMovieComment = () => {
   return {
+    id: String(new Date() + Math.random()),
     emoji: getRandomArrayItem(EMOJI_NAMES),
     text: getRandomArrayItem(COMMENT_TEXT),
     author: getRandomArrayItem(COMMENT_AUTHORS),
