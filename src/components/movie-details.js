@@ -1,5 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import moment from "moment";
+import {encode} from "he";
 
 const createMovieDetailsTemplate = (movieData) => {
   const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, inWatchlist, watched, favorite} = movieData;
@@ -102,8 +103,9 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
   const movieCommentsQuantity = movieComments.length;
   const getMovieComments = () => {
     return movieComments.map((movieComment) => {
-      const {id, emoji, text, author, date} = movieComment;
+      const {id, emoji, text: notSanitizedComment, author, date} = movieComment;
       const commentDate = moment(date).format(`YYYY/MM/DD hh:mm`);
+      const currentText = encode(notSanitizedComment);
 
       return (
         `<li class="film-details__comment">
@@ -111,7 +113,7 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
             <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
           </span>
           <div>
-            <p class="film-details__comment-text">${text}</p>
+            <p class="film-details__comment-text">${currentText}</p>
             <p class="film-details__comment-info">
               <span class="film-details__comment-author">${author}</span>
               <span class="film-details__comment-day">${commentDate}</span>
@@ -177,8 +179,6 @@ export default class MovieDetails extends AbstractSmartComponent {
     this.setAddToWatchlistButtonClickHandler(this._setAddToWatchlistButtonClickHandler);
     this.setMarkAsWatchedButtonClickHandler(this._setMarkAsWatchedButtonClickHandler);
     this.setMarkAsFavoriteButtonClickHandler(this._setMarkAsFavoriteButtonClickHandler);
-
-    // this.setSubmitHandler(this._setSubmitHandler);
 
     this._setEmoji();
   }
