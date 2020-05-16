@@ -179,4 +179,12 @@ export default class PageController {
   _onFilterChange() {
     this._updateMovies(MOVIES_QUANTITY_ON_START);
   }
+
+  hide() {
+    this._container.hide();
+  }
+
+  show() {
+    this._container.show();
+  }
 }
