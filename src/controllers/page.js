@@ -130,15 +130,19 @@ export default class PageController {
 
   _updateMovies(quantity) {
     this._removeMovies();
-    this._renderMovies(this._moviesModel.getMovies().slice(0, quantity));
-    this._renderShowMoreButton();
+    this._renderMovies(this._moviesModel.getMovies().slice(0, this._moviesQuantityToShow));
+    console.log(this._moviesQuantityToShow);
+    if (this._moviesQuantityToShow > MOVIES_QUANTITY_ON_START) {
+      this._renderShowMoreButton();
+    }
   }
 
   _onDataChange(movieController, oldData, newData) {
     const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
 
     if (isSuccess) {
-      movieController.render(newData);
+      // movieController.render(newData);
+      this._updateMovies(this._moviesQuantityToShow);
     }
   }
 
@@ -165,6 +169,8 @@ export default class PageController {
     const moviesData = this._moviesModel.getMovies();
 
     this._moviesQuantityToShow = this._moviesQuantityToShow + MOVIES_QUANTITY_BY_BUTTON;
+
+    console.log(this._moviesQuantityToShow);
 
     const sortedMovies = getSortedMovies(moviesData, this._sortingComponent.getSortType(), previousMovieQuantity, this._moviesQuantityToShow);
 
