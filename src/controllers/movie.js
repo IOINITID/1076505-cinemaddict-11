@@ -1,6 +1,7 @@
 import MovieComponent from "../components/movie";
 import MovieDetailsComponent from "../components/movie-details";
 import {render, remove, replace, RenderPosition} from "../utils/render";
+import Comments from "../models/comments";
 
 const Mode = {
   DEFAULT: `default`,
@@ -12,6 +13,8 @@ export default class MovieController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+
+    this._commentsModel = new Comments();
 
     this._mode = Mode.DEFAULT;
 
@@ -26,10 +29,17 @@ export default class MovieController {
     this._onInWatchlistDataChange = this._onInWatchlistDataChange.bind(this);
     this._onWatchedDataChange = this._onWatchedDataChange.bind(this);
     this._onFavoriteDataChange = this._onFavoriteDataChange.bind(this);
+
+    this._commentsModel.setDataChangeHandler(() => {
+      this._movieData.comments = this._commentsModel.getComments();
+      this.render(this._movieData);
+    });
   }
 
   render(movieData) {
     this._movieData = movieData;
+
+    this._commentsModel.setComments(this._movieData.comments);
 
     const oldMovie = this._movieComponent;
     const oldMovieDetails = this._movieDetailsComponent;
@@ -47,6 +57,9 @@ export default class MovieController {
     this._movieDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
 
     this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
+
+    this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
+    this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDeleteHandler);
 
     if (oldMovie && oldMovieDetails) {
       replace(this._movieComponent, oldMovie);
@@ -118,5 +131,19 @@ export default class MovieController {
       evt.preventDefault();
       this._removeMovieDetails();
     }
+  }
+
+  _onCommentSubmit(formData) {
+    // логика по созданию объекта комментария
+    const comment = {
+      text: formData.get(`text`),
+      // ...
+    };
+
+    this._commentsModel.createComment(comment);
+  }
+
+  _onCommentDeleteHandler(id) {
+    this._commentsModel.deleteComment(id);
   }
 }

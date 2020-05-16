@@ -222,4 +222,21 @@ export default class MovieDetails extends AbstractSmartComponent {
       });
     });
   }
+
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+      handler(new FormData(evt.target));
+    });
+
+    this._setPopupCloseButtonClick = handler;
+  }
+
+  setCommentDeleteHandler(handler) {
+    this.getElement().querySelector(`.comment-container`).addEventListener(`click`, (evt) => {
+      if (evt.target === ``) { //
+        // evt.target
+        handler(id);
+      }
+    });
+  }
 }
