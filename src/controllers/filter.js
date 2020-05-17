@@ -39,6 +39,10 @@ export default class FilterController {
     }
   }
 
+  getFilterComponent() {
+    return this._filterComponent;
+  }
+
   _onFilterChange(filterType) {
     this._moviesModel.setFilter(filterType);
     this._activeFilterType = filterType;

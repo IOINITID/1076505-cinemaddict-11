@@ -36,10 +36,13 @@ export default class Filter extends AbstractComponent {
   }
 
   setFilterChangeHandler(handler) {
-    this.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-
-      handler(evt.target.id);
+    this.getElement().querySelectorAll(`.main-navigation__item`).forEach((filter) => {
+      filter.addEventListener(`click`, (evt) => handler(evt.target.id));
     });
+  }
+
+  setStatisticsClickHandler(handler) {
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, handler);
+    this._setStatisticsClickHandler = handler;
   }
 }

@@ -1,8 +1,9 @@
 import RatingComponent from "./components/rating";
 import FilterController from "./controllers/filter";
-import StatisticsComponent from "./components/statistics";
+import MoviesStatisticsComponent from "./components/movies-statistics";
 import PageController from "./controllers/page";
 import MoviesModel from "./models/movies";
+import StatisticsComponent from "./components/statistics";
 import {generateMoviesData} from "./mocks/movies-data";
 import {render, RenderPosition} from "./utils/render";
 
@@ -22,7 +23,24 @@ filterController.render();
 
 const statisticsElement = document.querySelector(`.footer__statistics`);
 
-render(statisticsElement, new StatisticsComponent(moviesData.length), RenderPosition.BEFOREEND);
+render(statisticsElement, new MoviesStatisticsComponent(moviesData.length), RenderPosition.BEFOREEND);
 
 const pageController = new PageController(mainElement, moviesModel);
 pageController.render(moviesData);
+
+const statisticsComponent = new StatisticsComponent(moviesModel);
+
+render(mainElement, statisticsComponent, RenderPosition.BEFOREEND);
+
+statisticsComponent.hide();
+
+filterController.getFilterComponent().setStatisticsClickHandler(() => {
+  pageController.hide();
+  statisticsComponent.show();
+  statisticsComponent.render();
+});
+
+filterController.getFilterComponent().setFilterChangeHandler(() => {
+  pageController.show();
+  statisticsComponent.hide();
+});
