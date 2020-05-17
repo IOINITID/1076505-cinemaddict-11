@@ -1,5 +1,12 @@
 export const RANK_NAMES = [`novice`, `fan`, `movie buff`];
 
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
+};
+
 export const MONTH_NAMES = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`];
 
 export const EMOJI_NAMES = [`smile`, `sleeping`, `puke`, `angry`];

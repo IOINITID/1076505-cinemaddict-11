@@ -16,67 +16,68 @@ import {
   COMMENT_AUTHORS,
 } from "../const";
 
-export const generateFilmDetails = () => {
+export const generateMovieData = () => {
   return {
+    id: String(new Date() + Math.random()),
     title: getRandomArrayItem(FILM_DETAILS_TITLES),
     originalTitle: getRandomArrayItem(FILM_DETAILS_TITLES),
     rating: (Math.random() * 10).toFixed(1),
     image: getRandomArrayItem(FILM_DETAILS_POSTERS),
     age: `${getRandomIntegerNumber(1, 19)}+`,
     director: getRandomArrayItem(FILM_DETAILS_DIRECTORS),
-    writers: generateFilmDetailsItems(FILM_DETAILS_WRITERS, FILM_DETAILS_WRITERS.length, `, `),
-    actors: generateFilmDetailsItems(FILM_DETAILS_ACTORS, FILM_DETAILS_ACTORS.length, `, `),
-    releaseDate: getCurrentFilmDetailsDate(),
-    runtime: getFilmRuntime(),
+    writers: generateMovieDetailsItems(FILM_DETAILS_WRITERS, FILM_DETAILS_WRITERS.length, `, `),
+    actors: generateMovieDetailsItems(FILM_DETAILS_ACTORS, FILM_DETAILS_ACTORS.length, `, `),
+    releaseDate: getCurrentMovieDetailsDate(),
+    runtime: getMovieRuntime(),
     country: getRandomArrayItem(FILM_DETAILS_COUNTRIES),
     genres: FILM_DETAILS_GENRES,
-    description: generateFilmDetailsItems(FILM_DETAILS_DESCRIPTIONS, 6),
-    comments: generateFilmsComments(getRandomIntegerNumber(0, 6)),
+    description: generateMovieDetailsItems(FILM_DETAILS_DESCRIPTIONS, 6),
+    comments: generateMovieComments(getRandomIntegerNumber(0, 6)),
     inWatchlist: Math.random() > 0.5,
     watched: Math.random() > 0.5,
     favorite: Math.random() > 0.5,
   };
 };
 
-export const generateFilmsDetails = (count) => {
-  return new Array(count).fill(``).map(generateFilmDetails);
+export const generateMoviesData = (quantity) => {
+  return new Array(quantity).fill(``).map(generateMovieData);
 };
 
-export const generateFilmComments = () => {
+export const generateMovieComment = () => {
   return {
+    id: String(new Date() + Math.random()),
     emoji: getRandomArrayItem(EMOJI_NAMES),
     text: getRandomArrayItem(COMMENT_TEXT),
     author: getRandomArrayItem(COMMENT_AUTHORS),
-    date: getCurrentFilmDetailsDate(),
-    currentEmoji: null,
+    date: getCurrentMovieDetailsDate(),
   };
 };
 
-export const generateFilmsComments = (count) => {
-  return new Array(count).fill(``).map(generateFilmComments);
+export const generateMovieComments = (quantity) => {
+  return new Array(quantity).fill(``).map(generateMovieComment);
 };
 
-const generateFilmDetailsItems = (items, count, devider = ` `) => {
-  let item = new Set();
-  let itemCount = getRandomIntegerNumber(1, count);
+const generateMovieDetailsItems = (items, quantity, devider = ` `) => {
+  let uniqueItems = new Set();
+  let itemsQuantity = getRandomIntegerNumber(1, quantity);
 
-  while (itemCount) {
-    item.add(getRandomArrayItem(items));
-    itemCount--;
+  while (itemsQuantity) {
+    uniqueItems.add(getRandomArrayItem(items));
+    itemsQuantity--;
   }
 
-  return [...item].join(devider);
+  return [...uniqueItems].join(devider);
 };
 
-const getCurrentFilmDetailsDate = () => {
+const getCurrentMovieDetailsDate = () => {
   const date = new Date();
   date.setFullYear(1950 + Math.floor(Math.random() * 50));
+
   return date;
 };
 
-const getFilmRuntime = () => {
+const getMovieRuntime = () => {
   const time = new Date(0);
-
   time.setMinutes(Math.floor(Math.random() * (-180)));
 
   return time;

@@ -1,6 +1,7 @@
-import MovieCardComponent from "../components/movie-card";
-import FilmDetailsComponent from "../components/film-details";
-import {render as renderComponent, remove, replace, RenderPosition} from "../utils/render";
+import MovieComponent from "../components/movie";
+import MovieDetailsComponent from "../components/movie-details";
+import CommentsModel from "../models/comments";
+import {render, remove, replace, RenderPosition} from "../utils/render";
 
 const Mode = {
   DEFAULT: `default`,
@@ -17,8 +18,10 @@ export default class MovieController {
 
     this._footerElement = document.querySelector(`.footer`);
 
-    this._movieCardComponent = null;
-    this._filmDetailsComponent = null;
+    this._commentsModel = new CommentsModel();
+
+    this._movieComponent = null;
+    this._movieDetailsComponent = null;
 
     this._onPopupCloseButtonClick = this._onPopupCloseButtonClick.bind(this);
     this._onPopupEscButtonKeydown = this._onPopupEscButtonKeydown.bind(this);
@@ -26,92 +29,127 @@ export default class MovieController {
     this._onInWatchlistDataChange = this._onInWatchlistDataChange.bind(this);
     this._onWatchedDataChange = this._onWatchedDataChange.bind(this);
     this._onFavoriteDataChange = this._onFavoriteDataChange.bind(this);
+
+    this._onCommentDelete = this._onCommentDelete.bind(this);
+    this._onCommentSubmit = this._onCommentSubmit.bind(this);
+
+    this._commentsModel.setDataChangeHandler(() => {
+      this._movieData.comments = this._commentsModel.getComments();
+      this.render(this._movieData);
+    });
   }
 
-  render(filmDetail) {
-    this._filmDetail = filmDetail;
+  render(movieData) {
+    this._movieData = movieData;
+    this._commentsModel.setComments(this._movieData.comments);
 
-    const oldFilm = this._movieCardComponent;
-    const oldFilmDetails = this._filmDetailsComponent;
+    const oldMovie = this._movieComponent;
+    const oldMovieDetails = this._movieDetailsComponent;
 
-    this._movieCardComponent = new MovieCardComponent(this._filmDetail);
-    this._filmDetailsComponent = new FilmDetailsComponent(this._filmDetail);
+    this._movieComponent = new MovieComponent(this._movieData);
+    this._movieDetailsComponent = new MovieDetailsComponent(this._movieData);
 
-    this._movieCardComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
-    this._filmDetailsComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
+    this._movieComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
+    this._movieDetailsComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
 
-    this._movieCardComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
-    this._filmDetailsComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
+    this._movieComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
+    this._movieDetailsComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
 
-    this._movieCardComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
-    this._filmDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
+    this._movieComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
+    this._movieDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
 
-    this._filmDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
+    this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
 
-    if (oldFilm && oldFilmDetails) {
-      replace(this._movieCardComponent, oldFilm);
-      replace(this._filmDetailsComponent, oldFilmDetails);
+    this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
+    this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
+
+    if (oldMovie && oldMovieDetails) {
+      replace(this._movieComponent, oldMovie);
+      replace(this._movieDetailsComponent, oldMovieDetails);
     } else {
-      renderComponent(this._container, this._movieCardComponent, RenderPosition.BEFOREEND);
+      render(this._container, this._movieComponent, RenderPosition.BEFOREEND);
     }
 
-    const filmPoster = this._movieCardComponent.getElement().querySelector(`.film-card__poster`);
-    const filmTitle = this._movieCardComponent.getElement().querySelector(`.film-card__title`);
-    const filmComments = this._movieCardComponent.getElement().querySelector(`.film-card__comments`);
+    const moviePosterElement = this._movieComponent.getElement().querySelector(`.film-card__poster`);
+    const movieTitleElement = this._movieComponent.getElement().querySelector(`.film-card__title`);
+    const movieCommentsElement = this._movieComponent.getElement().querySelector(`.film-card__comments`);
 
-    [filmPoster, filmTitle, filmComments].forEach((element) => {
+    [moviePosterElement, movieTitleElement, movieCommentsElement].forEach((element) => {
       element.addEventListener(`click`, () => {
         this._onViewChange();
         this._mode = Mode.OPEN;
-        this._filmDetailsComponent.rerender();
-        renderComponent(this._footerElement, this._filmDetailsComponent, RenderPosition.AFTEREND);
+        this._movieDetailsComponent.rerender();
+        render(this._footerElement, this._movieDetailsComponent, RenderPosition.AFTEREND);
         document.addEventListener(`keydown`, this._onPopupEscButtonKeydown);
+        this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
+        this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
       });
     });
   }
 
+  _onCommentSubmit(formData) {
+    const comment = {
+      id: String(new Date() + Math.random()),
+      emoji: formData.get(`comment-emoji`) || `smile`,
+      text: formData.get(`comment`),
+      author: `New author`,
+      date: new Date(),
+    };
+
+    this._commentsModel.createComment(comment);
+  }
+
+  _onCommentDelete(id) {
+    this._commentsModel.deleteComment(id);
+  }
+
   _onInWatchlistDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._filmDetail, Object.assign({}, this._filmDetail, {
-      inWatchlist: !this._filmDetail.inWatchlist,
+    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
+      inWatchlist: !this._movieData.inWatchlist,
     }));
   }
 
   _onWatchedDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._filmDetail, Object.assign({}, this._filmDetail, {
-      watched: !this._filmDetail.watched,
+    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
+      watched: !this._movieData.watched,
     }));
   }
 
   _onFavoriteDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._filmDetail, Object.assign({}, this._filmDetail, {
-      favorite: !this._filmDetail.favorite,
+    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
+      favorite: !this._movieData.favorite,
     }));
   }
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      this._removeFilmDetails();
+      this._removeMovieDetails();
     }
   }
 
-  _removeFilmDetails() {
-    remove(this._filmDetailsComponent);
+  destroy() {
+    remove(this._movieDetailsComponent);
+    remove(this._movieComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _removeMovieDetails() {
+    remove(this._movieDetailsComponent);
     document.removeEventListener(`keydown`, this._onPopupEscButtonKeydown);
   }
 
   _onPopupCloseButtonClick(evt) {
     evt.preventDefault();
-    this._removeFilmDetails();
+    this._removeMovieDetails();
   }
 
   _onPopupEscButtonKeydown(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      this._removeFilmDetails();
+      this._removeMovieDetails();
     }
   }
-
 }

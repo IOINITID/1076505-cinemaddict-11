@@ -1,26 +1,28 @@
-import UserRankComponent from "./components/user-rank";
-import SiteMenuComponent from "./components/site-menu";
-import SiteFooterStatiscticsComponent from "./components/site-footer-statistics";
+import RatingComponent from "./components/rating";
+import FilterController from "./controllers/filter";
+import StatisticsComponent from "./components/statistics";
 import PageController from "./controllers/page";
-import {generateFilmsDetails} from "./mock/film-details";
+import MoviesModel from "./models/movies";
+import {generateMoviesData} from "./mocks/movies-data";
 import {render, RenderPosition} from "./utils/render";
 
-const MOVIE_CARD_MAX_COUNT = 20;
+const MOVIES_MAX_QUANTITY = 20;
 
-const siteHeaderElement = document.querySelector(`.header`);
+const headerElement = document.querySelector(`.header`);
+const mainElement = document.querySelector(`.main`);
 
-const siteMainElement = document.querySelector(`.main`);
+const moviesData = generateMoviesData(MOVIES_MAX_QUANTITY);
+const moviesModel = new MoviesModel();
+moviesModel.setMovies(moviesData);
 
-const filmDetails = generateFilmsDetails(MOVIE_CARD_MAX_COUNT);
+render(headerElement, new RatingComponent(moviesData), RenderPosition.BEFOREEND);
 
-render(siteHeaderElement, new UserRankComponent(), RenderPosition.BEFOREEND);
+const filterController = new FilterController(mainElement, moviesModel);
+filterController.render();
 
-render(siteMainElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
+const statisticsElement = document.querySelector(`.footer__statistics`);
 
-const footerStatisticsElement = document.querySelector(`.footer__statistics`);
+render(statisticsElement, new StatisticsComponent(moviesData.length), RenderPosition.BEFOREEND);
 
-render(footerStatisticsElement, new SiteFooterStatiscticsComponent(filmDetails.length), RenderPosition.BEFOREEND);
-
-const pageController = new PageController(siteMainElement);
-
-pageController.render(filmDetails);
+const pageController = new PageController(mainElement, moviesModel);
+pageController.render(moviesData);

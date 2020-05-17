@@ -9,14 +9,14 @@ export const SortType = {
 const createSortList = () => {
   return (
     `<ul class="sort">
-    <li><a href="#" data-sort-type=${SortType.DEFAULT} class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" data-sort-type=${SortType.DATE} class="sort__button">Sort by date</a></li>
-    <li><a href="#" data-sort-type=${SortType.RATING} class="sort__button">Sort by rating</a></li>
-  </ul>`
+      <li><a href="#" data-sort-type=${SortType.DEFAULT} class="sort__button sort__button--active">Sort by default</a></li>
+      <li><a href="#" data-sort-type=${SortType.DATE} class="sort__button">Sort by date</a></li>
+      <li><a href="#" data-sort-type=${SortType.RATING} class="sort__button">Sort by rating</a></li>
+    </ul>`
   );
 };
 
-export default class Sort extends AbstractComponent {
+export default class Sorting extends AbstractComponent {
   constructor() {
     super();
 
@@ -32,8 +32,8 @@ export default class Sort extends AbstractComponent {
   }
 
   _clearActiveState() {
-    this.getElement().querySelectorAll(`.sort__button`).forEach((element) => {
-      element.classList.remove(`sort__button--active`);
+    this.getElement().querySelectorAll(`.sort__button`).forEach((button) => {
+      button.classList.remove(`sort__button--active`);
     });
   }
 
