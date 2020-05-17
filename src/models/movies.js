@@ -1,10 +1,5 @@
 import {getMoviesByFilter} from "../utils/filter";
-
-const RatingLevel = {
-  NOVICE: `novice`,
-  FAN: `fan`,
-  MOVIEBUFF: `movie buff`,
-};
+import {FilterType, RatingLevel} from "../const";
 
 const sortData = (list) => {
   let sortedData = [];
@@ -36,13 +31,6 @@ const sortData = (list) => {
   }
 
   return resultData;
-};
-
-const FilterType = {
-  ALL: `All movies`,
-  WATCHLIST: `Watchlist`,
-  HISTORY: `History`,
-  FAVORITES: `Favorites`
 };
 
 const StatisticsFilter = {

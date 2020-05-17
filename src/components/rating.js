@@ -1,10 +1,5 @@
 import AbstractComponent from "./abstract-component";
-
-const RatingLevel = {
-  NOVICE: `novice`,
-  FAN: `fan`,
-  MOVIEBUFF: `movie buff`,
-};
+import {RatingLevel} from "../const";
 
 const getRating = (moviesWatched) => {
   const moviesQuantity = moviesWatched.filter((movieData) => movieData.watched === true).length;

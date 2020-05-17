@@ -1,14 +1,7 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "./abstract-smart-component";
-
-const StatsFilter = {
-  ALL_TIME: `all-time`,
-  TODAY: `today`,
-  WEEK: `week`,
-  MONTH: `month`,
-  YEAR: `year`,
-};
+import {StatsFilter} from "../const";
 
 const BAR_HEIGHT = 50;
 
