@@ -36,6 +36,7 @@ export const generateMovieData = () => {
     inWatchlist: Math.random() > 0.5,
     watched: Math.random() > 0.5,
     favorite: Math.random() > 0.5,
+    watchingDate: new Date() - Math.random() * 30,
   };
 };
 
