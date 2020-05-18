@@ -138,9 +138,7 @@ export default class Movies {
       });
     });
 
-    let sortedGenres = sortData(genres);
-
-    return sortedGenres;
+    return sortData(genres);
   }
 
   getTopGenre(filter) {
