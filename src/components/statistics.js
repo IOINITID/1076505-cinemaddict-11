@@ -86,9 +86,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _getContext(genres) {
-    this._context = this.getElement()
-      .querySelector(`.statistic__chart`)
-      .getContext(`2d`);
+    this._context = this.getElement().querySelector(`.statistic__chart`).getContext(`2d`);
 
     this._context.height = BAR_HEIGHT * Object.keys(genres).length;
 
