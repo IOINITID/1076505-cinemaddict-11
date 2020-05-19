@@ -10,17 +10,7 @@ const sortData = (list) => {
     }
   }
 
-  sortedData.sort((a, b) => {
-    if (a[1] > b[1]) {
-      return -1;
-    } else {
-      if (a[1] > b[1]) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }
-  });
+  sortedData.sort((a, b) => (a[1] > b[1] === -1) ? a[1] - b[1] : b[1] - a[1]);
 
   let resultData = {};
 
@@ -110,23 +100,22 @@ export default class Movies {
         return moviesWatched;
     }
 
-    return moviesWatched.filter((item) => {
-      return item.watchingDate > date;
-    });
+    return moviesWatched.filter((item) => item.watchingDate > date);
   }
 
   getRating() {
     const moviesQuantity = this._moviesData.filter((movieData) => movieData.watched === true).length;
 
-    if (moviesQuantity > 0 && moviesQuantity <= 10) {
-      return RatingLevel.NOVICE;
-    } else if (moviesQuantity > 10 && moviesQuantity <= 20) {
-      return RatingLevel.FAN;
-    } else if (moviesQuantity >= 21) {
-      return RatingLevel.MOVIEBUFF;
+    switch (moviesQuantity) {
+      case moviesQuantity > 0 && moviesQuantity <= 10:
+        return RatingLevel.NOVICE;
+      case moviesQuantity > 10 && moviesQuantity <= 20:
+        return RatingLevel.FAN;
+      case moviesQuantity >= 21:
+        return RatingLevel.MOVIEBUFF;
+      default:
+        return ``;
     }
-
-    return ``;
   }
 
   getGenresStatistics(filter) {
@@ -158,12 +147,9 @@ export default class Movies {
       return total + movie.runtime;
     }, 0);
 
-    const hours = parseInt(totalDuration / MINUTES_PER_HOUR, 10);
-    const minutes = totalDuration - hours * MINUTES_PER_HOUR;
-
     return {
-      hours,
-      minutes,
+      hours: parseInt(totalDuration / MINUTES_PER_HOUR, 10),
+      minutes: totalDuration - (parseInt(totalDuration / MINUTES_PER_HOUR, 10)) * MINUTES_PER_HOUR,
     };
   }
 
