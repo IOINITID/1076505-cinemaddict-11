@@ -97,6 +97,7 @@ export default class PageController {
   _removeMovies() {
     this._showedMovieControllers.forEach((movieController) => movieController.destroy());
     this._showedMovieControllers = [];
+    remove(this._showMoreButtonComponent);
   }
 
   _renderMovies(moviesData) {
@@ -135,7 +136,9 @@ export default class PageController {
     this._removeMovies();
     this._renderMovies(this._moviesModel.getMovies().slice(0, quantity));
 
-    this._renderShowMoreButton();
+    if (this._moviesModel.getMovies().length > quantity) {
+      this._renderShowMoreButton();
+    }
   }
 
   _onDataChange(movieController, oldData, newData) {
