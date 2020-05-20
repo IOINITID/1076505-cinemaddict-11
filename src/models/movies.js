@@ -1,6 +1,16 @@
 import {getMoviesByFilter} from "../utils/filter";
 import {FilterType, RatingLevel} from "../const";
 
+const StatisticsFilter = {
+  ALL_TIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
+};
+
+const MINUTES_PER_HOUR = 60;
+
 const sortData = (list) => {
   let sortedData = [];
 
@@ -10,7 +20,7 @@ const sortData = (list) => {
     }
   }
 
-  sortedData.sort((a, b) => (a[1] > b[1] === -1) ? a[1] - b[1] : b[1] - a[1]);
+  sortedData.sort((a, b) => b[1] - a[1]);
 
   let resultData = {};
 
@@ -22,16 +32,6 @@ const sortData = (list) => {
 
   return resultData;
 };
-
-const StatisticsFilter = {
-  ALL_TIME: `all-time`,
-  TODAY: `today`,
-  WEEK: `week`,
-  MONTH: `month`,
-  YEAR: `year`,
-};
-
-const MINUTES_PER_HOUR = 60;
 
 export default class Movies {
   constructor() {
@@ -106,7 +106,7 @@ export default class Movies {
   getRating() {
     const moviesQuantity = this._moviesData.filter((movieData) => movieData.watched === true).length;
 
-    switch (moviesQuantity) {
+    switch (true) {
       case moviesQuantity > 0 && moviesQuantity <= 10:
         return RatingLevel.NOVICE;
       case moviesQuantity > 10 && moviesQuantity <= 20:
@@ -147,9 +147,11 @@ export default class Movies {
       return total + movie.runtime;
     }, 0);
 
+    const hours = parseInt(totalDuration / MINUTES_PER_HOUR, 10);
+
     return {
-      hours: parseInt(totalDuration / MINUTES_PER_HOUR, 10),
-      minutes: totalDuration - (parseInt(totalDuration / MINUTES_PER_HOUR, 10)) * MINUTES_PER_HOUR,
+      hours,
+      minutes: totalDuration - hours * MINUTES_PER_HOUR,
     };
   }
 
