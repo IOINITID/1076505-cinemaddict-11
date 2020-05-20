@@ -3,7 +3,6 @@ import FilterController from "./controllers/filter";
 import MoviesStatisticsComponent from "./components/movies-statistics";
 import PageController from "./controllers/page";
 import MoviesModel from "./models/movies";
-import StatisticsComponent from "./components/statistics";
 import {generateMoviesData} from "./mocks/movies-data";
 import {render, RenderPosition} from "./utils/render";
 
@@ -18,29 +17,16 @@ moviesModel.setMovies(moviesData);
 
 render(headerElement, new RatingComponent(moviesData), RenderPosition.BEFOREEND);
 
+const pageController = new PageController(mainElement, moviesModel);
+
 const filterController = new FilterController(mainElement, moviesModel);
+
+filterController.setOnStatisticsClickHangler(pageController.hide);
+filterController.setOnFilterClickHangler(pageController.show);
+
 filterController.render();
 
 const statisticsElement = document.querySelector(`.footer__statistics`);
 
 render(statisticsElement, new MoviesStatisticsComponent(moviesData.length), RenderPosition.BEFOREEND);
-
-const pageController = new PageController(mainElement, moviesModel);
 pageController.render(moviesData);
-
-const statisticsComponent = new StatisticsComponent(moviesModel);
-
-render(mainElement, statisticsComponent, RenderPosition.BEFOREEND);
-
-statisticsComponent.hide();
-
-filterController.getFilterComponent().setStatisticsClickHandler(() => {
-  pageController.hide();
-  statisticsComponent.show();
-  statisticsComponent.render();
-});
-
-filterController.getFilterComponent().setFilterChangeHandler(() => {
-  pageController.show();
-  statisticsComponent.hide();
-});

@@ -62,6 +62,9 @@ export default class PageController {
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 
+    this.hide = this.hide.bind(this);
+    this.show = this.show.bind(this);
+
     this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._moviesModel.setFilterChangeHandler(this._onFilterChange);
   }
