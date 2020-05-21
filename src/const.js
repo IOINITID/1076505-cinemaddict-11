@@ -7,6 +7,20 @@ export const FilterType = {
   FAVORITES: `favorites`,
 };
 
+export const StatsFilter = {
+  ALL_TIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
+};
+
+export const RatingLevel = {
+  NOVICE: `novice`,
+  FAN: `fan`,
+  MOVIEBUFF: `movie buff`,
+};
+
 export const MONTH_NAMES = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`];
 
 export const EMOJI_NAMES = [`smile`, `sleeping`, `puke`, `angry`];

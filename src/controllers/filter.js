@@ -1,6 +1,7 @@
-import FilterComponent from "../components/filter.js";
-import {FilterType} from "../const.js";
-import {render, replace, RenderPosition} from "../utils/render.js";
+import FilterComponent from "../components/filter";
+import StatisticsComponent from "../components/statistics";
+import {FilterType} from "../const";
+import {render, replace, RenderPosition} from "../utils/render";
 import {getMoviesByFilter} from "../utils/filter";
 
 export default class FilterController {
@@ -10,6 +11,11 @@ export default class FilterController {
 
     this._activeFilterType = FilterType.ALL;
     this._filterComponent = null;
+
+    this._statisticsComponent = null;
+
+    this._onStatisticsClickHanglers = [];
+    this._onFilterClickHandlers = [];
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
@@ -32,11 +38,33 @@ export default class FilterController {
     this._filterComponent = new FilterComponent(filters);
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
+    const oldStatistics = this._statisticsComponent;
+    this._statisticsComponent = new StatisticsComponent(this._moviesModel);
+
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
     } else {
-      render(container, this._filterComponent, RenderPosition.BEFOREEND);
+      render(container, this._filterComponent, RenderPosition.AFTERBEGIN);
     }
+
+    if (oldStatistics) {
+      replace(this._statisticsComponent, oldStatistics);
+    } else {
+      render(this._container, this._statisticsComponent, RenderPosition.BEFOREEND);
+    }
+
+    this._statisticsComponent.hide();
+
+    this._filterComponent.setStatisticsClickHandler(() => {
+      this._statisticsComponent.show();
+      this._statisticsComponent.render();
+      this._callHandlers(this._onStatisticsClickHanglers);
+    });
+
+    this._filterComponent.setFilterChangeHandler(() => {
+      this._statisticsComponent.hide();
+      this._callHandlers(this._onFilterClickHandlers);
+    });
   }
 
   _onFilterChange(filterType) {
@@ -47,5 +75,17 @@ export default class FilterController {
 
   _onDataChange() {
     this.render();
+  }
+
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
+  }
+
+  setOnStatisticsClickHangler(handler) {
+    this._onStatisticsClickHanglers.push(handler);
+  }
+
+  setOnFilterClickHangler(handler) {
+    this._onFilterClickHandlers.push(handler);
   }
 }

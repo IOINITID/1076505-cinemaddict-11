@@ -28,14 +28,15 @@ export const generateMovieData = () => {
     writers: generateMovieDetailsItems(FILM_DETAILS_WRITERS, FILM_DETAILS_WRITERS.length, `, `),
     actors: generateMovieDetailsItems(FILM_DETAILS_ACTORS, FILM_DETAILS_ACTORS.length, `, `),
     releaseDate: getCurrentMovieDetailsDate(),
-    runtime: getMovieRuntime(),
+    runtime: 130,
     country: getRandomArrayItem(FILM_DETAILS_COUNTRIES),
-    genres: FILM_DETAILS_GENRES,
+    genres: generateMovieDetailsItems(FILM_DETAILS_GENRES, FILM_DETAILS_GENRES.length, `, `).split(`, `),
     description: generateMovieDetailsItems(FILM_DETAILS_DESCRIPTIONS, 6),
     comments: generateMovieComments(getRandomIntegerNumber(0, 6)),
     inWatchlist: Math.random() > 0.5,
     watched: Math.random() > 0.5,
     favorite: Math.random() > 0.5,
+    watchingDate: new Date() - Math.random() * 30,
   };
 };
 
@@ -74,11 +75,4 @@ const getCurrentMovieDetailsDate = () => {
   date.setFullYear(1950 + Math.floor(Math.random() * 50));
 
   return date;
-};
-
-const getMovieRuntime = () => {
-  const time = new Date(0);
-  time.setMinutes(Math.floor(Math.random() * (-180)));
-
-  return time;
 };

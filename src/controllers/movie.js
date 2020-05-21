@@ -32,11 +32,9 @@ export default class MovieController {
 
     this._onCommentDelete = this._onCommentDelete.bind(this);
     this._onCommentSubmit = this._onCommentSubmit.bind(this);
+    this._onDataChangeHandler = this._onDataChangeHandler.bind(this);
 
-    this._commentsModel.setDataChangeHandler(() => {
-      this._movieData.comments = this._commentsModel.getComments();
-      this.render(this._movieData);
-    });
+    this._commentsModel.setDataChangeHandler(this._onDataChangeHandler);
   }
 
   render(movieData) {
@@ -87,10 +85,15 @@ export default class MovieController {
     });
   }
 
+  _onDataChangeHandler() {
+    this._movieData.comments = this._commentsModel.getComments();
+    this.render(this._movieData);
+  }
+
   _onCommentSubmit(formData) {
     const comment = {
       id: String(new Date() + Math.random()),
-      emoji: formData.get(`comment-emoji`) || `smile`,
+      emoji: formData.get(`comment-emoji`),
       text: formData.get(`comment`),
       author: `New author`,
       date: new Date(),
