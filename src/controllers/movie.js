@@ -2,6 +2,9 @@ import MovieComponent from "../components/movie";
 import MovieDetailsComponent from "../components/movie-details";
 import CommentsModel from "../models/comments";
 import {render, remove, replace, RenderPosition} from "../utils/render";
+// import API from "../api";
+
+// const AUTORIZATION = `Basic ekfjdcndjfkrltj`;
 
 const Mode = {
   DEFAULT: `default`,
@@ -19,6 +22,7 @@ export default class MovieController {
     this._footerElement = document.querySelector(`.footer`);
 
     this._commentsModel = new CommentsModel();
+    // this._api = new API(AUTORIZATION);
 
     this._movieComponent = null;
     this._movieDetailsComponent = null;
@@ -40,6 +44,11 @@ export default class MovieController {
   render(movieData) {
     this._movieData = movieData;
     this._commentsModel.setComments(this._movieData.comments);
+
+    // this._api.getComments(this._movieData.id)
+    // .then((commentsData) => {
+    //   this._commentsModel.setComments(commentsData);
+    // });
 
     const oldMovie = this._movieComponent;
     const oldMovieDetails = this._movieDetailsComponent;
