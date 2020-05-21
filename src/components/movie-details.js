@@ -40,7 +40,7 @@ const createMovieDetailsPosterTemplate = (moviePoster) => {
 
   return (
     `<div class="film-details__poster">
-      <img class="film-details__poster-img" src="./images/posters/${image}" alt="">
+      <img class="film-details__poster-img" src="./${image}" alt="">
       <p class="film-details__age">${age}</p>
     </div>`
   );
@@ -105,7 +105,7 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
     return movieComments.map((movieComment) => {
       const {id, emoji, text: notSanitizedComment, author, date} = movieComment;
       const commentDate = moment(date).format(`YYYY/MM/DD hh:mm`);
-      const currentText = encode(notSanitizedComment);
+      const currentText = notSanitizedComment ? encode(notSanitizedComment) : ``;
 
       return (
         `<li class="film-details__comment">
