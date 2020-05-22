@@ -2,8 +2,8 @@ import AbstractSmartComponent from "./abstract-smart-component";
 import moment from "moment";
 import {encode} from "he";
 
-const createMovieDetailsTemplate = (movieData) => {
-  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, inWatchlist, watched, favorite} = movieData;
+const createMovieDetailsTemplate = (movieData, commentData) => {
+  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, inWatchlist, watched, favorite} = movieData;
   const moviePoster = {image, age};
   const movieInfo = {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description};
 
@@ -28,7 +28,7 @@ const createMovieDetailsTemplate = (movieData) => {
           </section>
         </div>
         <div class="form-details__bottom-container">
-          ${createMovieDetailsCommentsTemplate(comments)}
+          ${createMovieDetailsCommentsTemplate(commentData)}
         </div>
       </form>
     </section>`
@@ -158,16 +158,17 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
 };
 
 export default class MovieDetails extends AbstractSmartComponent {
-  constructor(movieData) {
+  constructor(movieData, commentData) {
     super();
 
     this._movieData = movieData;
+    this._commentData = commentData;
 
     this._setEmoji();
   }
 
   getTemplate() {
-    return createMovieDetailsTemplate(this._movieData);
+    return createMovieDetailsTemplate(this._movieData, this._commentData);
   }
 
   rerender() {

@@ -27,7 +27,7 @@ const getSortedMovies = (moviesData, sortType, from, to) => {
 
   switch (sortType) {
     case SortType.DATE:
-      sortedMovies = showingMovies.sort((a, b) => b.releaseDate.getFullYear() - a.releaseDate.getFullYear());
+      sortedMovies = showingMovies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
       break;
     case SortType.RATING:
       sortedMovies = showingMovies.sort((a, b) => b.rating - a.rating);
@@ -162,7 +162,7 @@ export default class PageController {
 
     this._renderMovies(sortedMovies);
 
-    if (!this._showMoreButtonComponent) {
+    if (this._moviesModel.getMovies().length > this._moviesQuantityToShow) {
       this._renderShowMoreButton();
     }
   }

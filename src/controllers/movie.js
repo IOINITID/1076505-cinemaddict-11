@@ -2,9 +2,10 @@ import MovieComponent from "../components/movie";
 import MovieDetailsComponent from "../components/movie-details";
 import CommentsModel from "../models/comments";
 import {render, remove, replace, RenderPosition} from "../utils/render";
-// import API from "../api";
+import API from "../api";
 
-// const AUTORIZATION = `Basic ekfjdcndjfkrltj`;
+const AUTHORIZATION = `Basic ekfjdcndjfkrltj`;
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict/`;
 
 const Mode = {
   DEFAULT: `default`,
@@ -22,7 +23,6 @@ export default class MovieController {
     this._footerElement = document.querySelector(`.footer`);
 
     this._commentsModel = new CommentsModel();
-    // this._api = new API(AUTORIZATION);
 
     this._movieComponent = null;
     this._movieDetailsComponent = null;
@@ -43,39 +43,38 @@ export default class MovieController {
 
   render(movieData) {
     this._movieData = movieData;
-    this._commentsModel.setComments(this._movieData.comments);
 
-    // this._api.getComments(this._movieData.id)
-    // .then((commentsData) => {
-    //   this._commentsModel.setComments(commentsData);
-    // });
+    const api = new API(AUTHORIZATION, END_POINT);
+
+    api.getComments(this._movieData.id)
+    .then((commentsData) => {
+      this._commentsModel.setComments(commentsData);
+      this._commentData = this._commentsModel.getComments();
+
+      this._movieDetailsComponent = new MovieDetailsComponent(this._movieData, this._commentData);
+
+      this._movieDetailsComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
+      this._movieDetailsComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
+      this._movieDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
+      this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
+      this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
+      this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
+
+      if (oldMovie && oldMovieDetails) {
+        replace(this._movieComponent, oldMovie);
+        replace(this._movieDetailsComponent, oldMovieDetails);
+      } else {
+        render(this._container, this._movieComponent, RenderPosition.BEFOREEND);
+      }
+    });
 
     const oldMovie = this._movieComponent;
     const oldMovieDetails = this._movieDetailsComponent;
 
     this._movieComponent = new MovieComponent(this._movieData);
-    this._movieDetailsComponent = new MovieDetailsComponent(this._movieData);
-
     this._movieComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
-    this._movieDetailsComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
-
     this._movieComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
-    this._movieDetailsComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
-
     this._movieComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
-    this._movieDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
-
-    this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
-
-    this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
-    this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
-
-    if (oldMovie && oldMovieDetails) {
-      replace(this._movieComponent, oldMovie);
-      replace(this._movieDetailsComponent, oldMovieDetails);
-    } else {
-      render(this._container, this._movieComponent, RenderPosition.BEFOREEND);
-    }
 
     const moviePosterElement = this._movieComponent.getElement().querySelector(`.film-card__poster`);
     const movieTitleElement = this._movieComponent.getElement().querySelector(`.film-card__title`);
