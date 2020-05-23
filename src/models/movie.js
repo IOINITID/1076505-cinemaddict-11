@@ -35,7 +35,7 @@ export default class Movie {
         "writers": this.writers,
         "release": {
           "release_country": this.country,
-          "date": this.releaseDate.toISOString()
+          "date": this.releaseDate
         },
         "total_rating": this.rating,
         "runtime": this.runtime,
@@ -44,7 +44,7 @@ export default class Movie {
       "user_details": {
         "watchlist": this.inWatchlist,
         "already_watched": this.watched,
-        "watching_date": this.watchingDate ? this.watchingDate.toISOString() : null,
+        "watching_date": this.watchingDate ? this.watchingDate : null,
         "favorite": this.favorite
       },
       "comments": this.comments

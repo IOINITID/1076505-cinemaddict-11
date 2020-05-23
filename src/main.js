@@ -16,7 +16,7 @@ const statisticsElement = document.querySelector(`.footer__statistics`);
 
 const api = new API(AUTHORIZATION, END_POINT);
 const moviesModel = new MoviesModel();
-const pageController = new PageController(mainElement, moviesModel);
+const pageController = new PageController(mainElement, moviesModel, api);
 const filterController = new FilterController(mainElement, moviesModel);
 const loading = new Loading();
 
@@ -27,6 +27,8 @@ filterController.render();
 render(mainElement, loading, RenderPosition.BEFOREEND);
 
 const afterLoading = (data) => {
+  console.log(data);
+
   remove(loading);
   moviesModel.setMovies(data);
   const moviesData = moviesModel.getMovies();

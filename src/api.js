@@ -14,6 +14,7 @@ const StatusCode = {
 };
 
 const checkStatus = (response) => {
+  console.log(response);
   if (response.status >= StatusCode.OK && response.status < StatusCode.REDIRECT) {
     return response;
   } else {
@@ -75,6 +76,8 @@ export default class API {
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
+
+    // console.log(headers.get(`Authorization`), headers.get(`Content-Type`));
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(checkStatus)

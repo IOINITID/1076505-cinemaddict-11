@@ -3,6 +3,7 @@ import MovieDetailsComponent from "../components/movie-details";
 import CommentsModel from "../models/comments";
 import {render, remove, replace, RenderPosition} from "../utils/render";
 import API from "../api";
+import Movie from "../models/movie";
 
 const AUTHORIZATION = `Basic ekfjdcndjfkrltj`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
@@ -128,9 +129,12 @@ export default class MovieController {
 
   _onInWatchlistDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
-      inWatchlist: !this._movieData.inWatchlist,
-    }));
+    console.log(this._movieData);
+    const movieData = Movie.clone(this._movieData);
+
+    movieData.inWatchlist = !movieData.inWatchlist;
+
+    this._onDataChange(this, this._movieData, movieData);
   }
 
   _onWatchedDataChange(evt) {
