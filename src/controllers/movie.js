@@ -5,7 +5,9 @@ import {render, remove, replace, RenderPosition} from "../utils/render";
 import API from "../api";
 
 const AUTHORIZATION = `Basic ekfjdcndjfkrltj`;
-const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict/`;
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 const Mode = {
   DEFAULT: `default`,
@@ -91,6 +93,16 @@ export default class MovieController {
         this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
       });
     });
+  }
+
+  shake() {
+    this._taskEditComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._taskComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._taskEditComponent.getElement().style.animation = ``;
+      this._taskComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _onDataChangeHandler() {
