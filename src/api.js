@@ -14,7 +14,6 @@ const StatusCode = {
 };
 
 const checkStatus = (response) => {
-  console.log(response);
   if (response.status >= StatusCode.OK && response.status < StatusCode.REDIRECT) {
     return response;
   } else {
@@ -48,7 +47,7 @@ export default class API {
       body: JSON.stringify(data.toRAW()),
     })
     .then((response) => response.json())
-    .then(Movie.parseMovies);
+    .then(Movie.parseMovie);
   }
 
   addComment(movieData, commentData) {
@@ -56,12 +55,12 @@ export default class API {
       url: `comments/${movieData.id}`,
       headers: new Headers({"Content-Type": `application/json`}),
       method: `POST`,
-      body: JSON.stringify(Comment.commentToRaw(commentData)),
+      body: JSON.stringify(Comment.toRAW(commentData)),
     })
       .then((response) => response.json())
-      .then(({movies, comments}) => {
+      .then(({movie, comments}) => {
         return {
-          movies: Movie.parseMovies(movies),
+          movie: Movie.parseMovie(movie),
           comments: Comment.parseComments(comments)
         };
       });
@@ -76,8 +75,6 @@ export default class API {
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
-
-    // console.log(headers.get(`Authorization`), headers.get(`Content-Type`));
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(checkStatus)

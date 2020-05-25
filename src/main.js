@@ -27,8 +27,6 @@ filterController.render();
 render(mainElement, loading, RenderPosition.BEFOREEND);
 
 const afterLoading = (data) => {
-  console.log(data);
-
   remove(loading);
   moviesModel.setMovies(data);
   const moviesData = moviesModel.getMovies();

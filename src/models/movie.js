@@ -7,7 +7,7 @@ export default class Movie {
     this.image = movieData.film_info.poster;
     this.age = movieData.film_info.age_rating;
     this.director = movieData.film_info.director;
-    this.writters = movieData.film_info.writers;
+    this.writers = movieData.film_info.writers;
     this.actors = movieData.film_info.actors;
     this.releaseDate = movieData.film_info.release.date;
     this.runtime = movieData.film_info.runtime;

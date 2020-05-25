@@ -26,6 +26,10 @@ export default class MovieController {
     this._footerElement = document.querySelector(`.footer`);
 
     this._commentsModel = new CommentsModel();
+    this._api = new API(AUTHORIZATION, END_POINT);
+
+    this._movieData = null;
+    this._commentData = null;
 
     this._movieComponent = null;
     this._movieDetailsComponent = null;
@@ -47,9 +51,7 @@ export default class MovieController {
   render(movieData) {
     this._movieData = movieData;
 
-    const api = new API(AUTHORIZATION, END_POINT);
-
-    api.getComments(this._movieData.id)
+    this._api.getComments(this._movieData.id)
     .then((commentsData) => {
       this._commentsModel.setComments(commentsData);
       this._commentData = this._commentsModel.getComments();
@@ -112,43 +114,44 @@ export default class MovieController {
   }
 
   _onCommentSubmit(formData) {
-    const comment = {
-      id: String(new Date() + Math.random()),
+    const commentFormData = {
       emoji: formData.get(`comment-emoji`),
       text: formData.get(`comment`),
-      author: `New author`,
-      date: new Date(),
+      date: new Date().toISOString(),
     };
 
-    this._commentsModel.createComment(comment);
+    this._api.addComment(this._movieData, commentFormData)
+      .then(() => {
+        this._commentsModel.createComment(commentFormData);
+      });
   }
 
   _onCommentDelete(id) {
-    this._commentsModel.deleteComment(id);
+    this._api.deleteComment(id)
+    .then(() => {
+      this._commentsModel.deleteComment(id);
+    });
   }
 
   _onInWatchlistDataChange(evt) {
     evt.preventDefault();
-    console.log(this._movieData);
     const movieData = Movie.clone(this._movieData);
-
     movieData.inWatchlist = !movieData.inWatchlist;
-
     this._onDataChange(this, this._movieData, movieData);
   }
 
   _onWatchedDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
-      watched: !this._movieData.watched,
-    }));
+    const movieData = Movie.clone(this._movieData);
+    movieData.watched = !movieData.watched;
+    this._onDataChange(this, this._movieData, movieData);
   }
 
   _onFavoriteDataChange(evt) {
     evt.preventDefault();
-    this._onDataChange(this, this._movieData, Object.assign({}, this._movieData, {
-      favorite: !this._movieData.favorite,
-    }));
+    const movieData = Movie.clone(this._movieData);
+    movieData.favorite = !movieData.favorite;
+    this._onDataChange(this, this._movieData, movieData);
   }
 
   setDefaultView() {

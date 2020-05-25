@@ -7,6 +7,14 @@ export default class Comment {
     this.date = commentData.date;
   }
 
+  static toRAW(comment) {
+    return {
+      "comment": comment.text,
+      "date": comment.date,
+      "emotion": comment.emoji,
+    };
+  }
+
   static parseComment(commentData) {
     return new Comment(commentData);
   }

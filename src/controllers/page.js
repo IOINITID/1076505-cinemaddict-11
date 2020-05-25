@@ -143,13 +143,6 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    // const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
-
-    // if (isSuccess) {
-    //   movieController.render(newData);
-    // }
-    console.log(newData);
-
     this._api.updateMovie(oldData.id, newData)
       .then((movieData) => {
         const isSuccess = this._moviesModel.updateMovie(oldData.id, movieData);
