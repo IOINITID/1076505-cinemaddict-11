@@ -30,13 +30,19 @@ export default class API {
   getMovies() {
     return this._load({url: `movies`})
     .then((response) => response.json())
-    .then(Movie.parseMovies);
+    .then(Movie.parseMovies)
+    .catch((error) => {
+      throw error;
+    });
   }
 
   getComments(id) {
     return this._load({url: `comments/${id}`})
     .then((response) => response.json())
-    .then(Comment.parseComments);
+    .then(Comment.parseComments)
+    .catch((error) => {
+      throw error;
+    });
   }
 
   updateMovie(id, data) {
@@ -47,7 +53,10 @@ export default class API {
       body: JSON.stringify(data.toRAW()),
     })
     .then((response) => response.json())
-    .then(Movie.parseMovie);
+    .then(Movie.parseMovie)
+    .catch((error) => {
+      throw error;
+    });
   }
 
   addComment(movieData, commentData) {
@@ -63,6 +72,9 @@ export default class API {
           movie: Movie.parseMovie(movie),
           comments: Comment.parseComments(comments)
         };
+      })
+      .catch((error) => {
+        throw error;
       });
   }
 

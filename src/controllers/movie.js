@@ -99,12 +99,10 @@ export default class MovieController {
   }
 
   shake() {
-    this._taskEditComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    this._taskComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._movieDetailsComponent.getElement().querySelector(`.film-details__new-comment`).style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
     setTimeout(() => {
-      this._taskEditComponent.getElement().style.animation = ``;
-      this._taskComponent.getElement().style.animation = ``;
+      this._movieDetailsComponent.getElement().querySelector(`.film-details__new-comment`).style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
@@ -123,6 +121,9 @@ export default class MovieController {
     this._api.addComment(this._movieData, commentFormData)
       .then(() => {
         this._commentsModel.createComment(commentFormData);
+      })
+      .catch(() => {
+        this.shake();
       });
   }
 
@@ -130,6 +131,9 @@ export default class MovieController {
     this._api.deleteComment(id)
     .then(() => {
       this._commentsModel.deleteComment(id);
+    })
+    .catch(() => {
+      // this.shake();
     });
   }
 
