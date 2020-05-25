@@ -118,21 +118,52 @@ export default class MovieController {
       date: new Date().toISOString(),
     };
 
+    const emojiList = this._movieDetailsComponent.getElement().querySelectorAll(`.film-details__emoji-item`);
+    const textField = this._movieDetailsComponent.getElement().querySelector(`.film-details__comment-input`);
+
     this._api.addComment(this._movieData, commentFormData)
       .then(() => {
+        emojiList.forEach((item) => {
+          item.disabled = true;
+        });
+        textField.disabled = true;
+        textField.style.border = ``;
         this._commentsModel.createComment(commentFormData);
       })
       .catch(() => {
+        emojiList.forEach((item) => {
+          item.disabled = false;
+        });
+        textField.disabled = false;
+        textField.style.border = `1px solid red`;
         this.shake();
       });
   }
 
   _onCommentDelete(id) {
+    const deleteButton = this._movieDetailsComponent.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    deleteButton.forEach((button) => {
+      button.addEventListener(`click`, (evt) => {
+        if (evt.target === button) {
+          button.textContent = `Deleting...`;
+          button.disabled = true;
+        }
+      });
+    });
+
     this._api.deleteComment(id)
     .then(() => {
       this._commentsModel.deleteComment(id);
     })
     .catch(() => {
+      deleteButton.forEach((button) => {
+        button.addEventListener(`click`, (evt) => {
+          if (evt.target === button) {
+            button.disabled = false;
+          }
+        });
+      });
       this.shake();
     });
   }
