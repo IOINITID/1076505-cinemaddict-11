@@ -133,7 +133,7 @@ export default class MovieController {
       this._commentsModel.deleteComment(id);
     })
     .catch(() => {
-      // this.shake();
+      this.shake();
     });
   }
 

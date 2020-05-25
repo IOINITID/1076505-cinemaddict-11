@@ -150,9 +150,6 @@ export default class PageController {
         if (isSuccess) {
           movieController.render(movieData);
         }
-      })
-      .catch((err) => {
-        throw err;
       });
   }
 
