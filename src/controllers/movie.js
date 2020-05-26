@@ -107,7 +107,7 @@ export default class MovieController {
   }
 
   _onDataChangeHandler() {
-    this._movieData.comments = this._commentsModel.getComments();
+    this._movieData.comments = this._commentsModel.getComments().map((item) => String(item.id));
     this.render(this._movieData);
   }
 
