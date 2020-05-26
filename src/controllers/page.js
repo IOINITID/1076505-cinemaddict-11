@@ -27,7 +27,7 @@ const getSortedMovies = (moviesData, sortType, from, to) => {
 
   switch (sortType) {
     case SortType.DATE:
-      sortedMovies = showingMovies.sort((a, b) => b.releaseDate.getFullYear() - a.releaseDate.getFullYear());
+      sortedMovies = showingMovies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
       break;
     case SortType.RATING:
       sortedMovies = showingMovies.sort((a, b) => b.rating - a.rating);
@@ -41,9 +41,10 @@ const getSortedMovies = (moviesData, sortType, from, to) => {
 };
 
 export default class PageController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, api) {
     this._container = container;
     this._moviesModel = moviesModel;
+    this._api = api;
 
     this._moviesData = [];
     this._showedMovieControllers = [];
@@ -142,11 +143,14 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
+    this._api.updateMovie(oldData.id, newData)
+      .then((movieData) => {
+        const isSuccess = this._moviesModel.updateMovie(oldData.id, movieData);
 
-    if (isSuccess) {
-      movieController.render(newData);
-    }
+        if (isSuccess) {
+          movieController.render(movieData);
+        }
+      });
   }
 
   _onViewChange() {
@@ -162,7 +166,7 @@ export default class PageController {
 
     this._renderMovies(sortedMovies);
 
-    if (!this._showMoreButtonComponent) {
+    if (this._moviesModel.getMovies().length > this._moviesQuantityToShow) {
       this._renderShowMoreButton();
     }
   }

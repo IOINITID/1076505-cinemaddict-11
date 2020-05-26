@@ -56,6 +56,15 @@ export default class FilterController {
     this._statisticsComponent.hide();
 
     this._filterComponent.setStatisticsClickHandler(() => {
+
+      const statisticsElement = this._filterComponent.getElement().querySelector(`.main-navigation__additional`);
+      const filterList = this._filterComponent.getElement().querySelectorAll(`.main-navigation__item`);
+
+      filterList.forEach((element) => {
+        element.classList.remove(`main-navigation__item--active`);
+      });
+      statisticsElement.classList.add(`main-navigation__item--active`);
+
       this._statisticsComponent.show();
       this._statisticsComponent.render();
       this._callHandlers(this._onStatisticsClickHanglers);

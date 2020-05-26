@@ -21,7 +21,7 @@ const createMovieTemplate = (movieData) => {
             <span class="film-card__duration">${movieRuntime}</span>
             <span class="film-card__genre">${movieGenres}</span>
           </p>
-        <img src="./images/posters/${image}" alt="" class="film-card__poster">
+        <img src="./${image}" alt="" class="film-card__poster">
         <p class="film-card__description">${movieDescription}</p>
         <a class="film-card__comments">${movieComments} comments</a>
         <form class="film-card__controls">

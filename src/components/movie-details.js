@@ -2,8 +2,8 @@ import AbstractSmartComponent from "./abstract-smart-component";
 import moment from "moment";
 import {encode} from "he";
 
-const createMovieDetailsTemplate = (movieData) => {
-  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, comments, inWatchlist, watched, favorite} = movieData;
+const createMovieDetailsTemplate = (movieData, commentData) => {
+  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, inWatchlist, watched, favorite} = movieData;
   const moviePoster = {image, age};
   const movieInfo = {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description};
 
@@ -28,7 +28,7 @@ const createMovieDetailsTemplate = (movieData) => {
           </section>
         </div>
         <div class="form-details__bottom-container">
-          ${createMovieDetailsCommentsTemplate(comments)}
+          ${createMovieDetailsCommentsTemplate(commentData)}
         </div>
       </form>
     </section>`
@@ -40,7 +40,7 @@ const createMovieDetailsPosterTemplate = (moviePoster) => {
 
   return (
     `<div class="film-details__poster">
-      <img class="film-details__poster-img" src="./images/posters/${image}" alt="">
+      <img class="film-details__poster-img" src="./${image}" alt="">
       <p class="film-details__age">${age}</p>
     </div>`
   );
@@ -105,7 +105,7 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
     return movieComments.map((movieComment) => {
       const {id, emoji, text: notSanitizedComment, author, date} = movieComment;
       const commentDate = moment(date).format(`YYYY/MM/DD hh:mm`);
-      const currentText = encode(notSanitizedComment);
+      const currentText = notSanitizedComment ? encode(notSanitizedComment) : ``;
 
       return (
         `<li class="film-details__comment">
@@ -158,16 +158,17 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
 };
 
 export default class MovieDetails extends AbstractSmartComponent {
-  constructor(movieData) {
+  constructor(movieData, commentData) {
     super();
 
     this._movieData = movieData;
+    this._commentData = commentData;
 
     this._setEmoji();
   }
 
   getTemplate() {
-    return createMovieDetailsTemplate(this._movieData);
+    return createMovieDetailsTemplate(this._movieData, this._commentData);
   }
 
   rerender() {
@@ -235,10 +236,17 @@ export default class MovieDetails extends AbstractSmartComponent {
   }
 
   setSubmitHandler(handler) {
-    let form = this.getElement().querySelector(`.film-details__inner`);
+    // const emojiContainer = document.querySelector(`.film-details__add-emoji-label`);
+    // const textField = document.querySelector(`.film-details__comment-input`);
+    const form = this.getElement().querySelector(`.film-details__inner`);
     form.addEventListener(`keydown`, (evt) => {
       if (evt.ctrlKey && evt.key === `Enter`) {
         evt.preventDefault();
+
+        // if (emojiContainer.childElementCount === 0) {
+        //   textField.setCustomValidity(`Select an emoji to send.`);
+        // }
+
         handler(new FormData(form));
       }
     });
