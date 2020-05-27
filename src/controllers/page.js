@@ -32,6 +32,9 @@ const getSortedMovies = (moviesData, sortType, from, to) => {
     case SortType.RATING:
       sortedMovies = showingMovies.sort((a, b) => b.rating - a.rating);
       break;
+    case SortType.COMMENTS:
+      sortedMovies = showingMovies.sort((a, b) => b.comments.length - a.comments.length);
+      break;
     case SortType.DEFAULT:
       sortedMovies = showingMovies;
       break;
@@ -118,8 +121,11 @@ export default class PageController {
     const moviesListTopRatedContainer = moviesExtraElement[0].querySelector(`.films-list__container`);
     const moviesListMostCommentedContainer = moviesExtraElement[1].querySelector(`.films-list__container`);
 
-    renderMovies(moviesListTopRatedContainer, moviesData.slice(0, MOVIES_EXTRA_QUANTITY), this._onDataChange, this._onViewChange);
-    renderMovies(moviesListMostCommentedContainer, moviesData.slice(0, MOVIES_EXTRA_QUANTITY), this._onDataChange, this._onViewChange);
+    const sortedMoviesByRating = getSortedMovies(moviesData, SortType.RATING, 0, MOVIES_EXTRA_QUANTITY);
+    const sortedMoviesByComments = getSortedMovies(moviesData, SortType.COMMENTS, 0, MOVIES_EXTRA_QUANTITY);
+
+    renderMovies(moviesListTopRatedContainer, sortedMoviesByRating, this._onDataChange, this._onViewChange);
+    renderMovies(moviesListMostCommentedContainer, sortedMoviesByComments, this._onDataChange, this._onViewChange);
   }
 
   _renderShowMoreButton() {

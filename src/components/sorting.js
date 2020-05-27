@@ -3,6 +3,7 @@ import AbstractComponent from "./abstract-component";
 export const SortType = {
   DATE: `date`,
   RATING: `rating`,
+  COMMENTS: `comment`,
   DEFAULT: `default`,
 };
 
