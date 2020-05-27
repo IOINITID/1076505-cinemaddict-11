@@ -1,6 +1,6 @@
 import API from "./api";
 import FilterController from "./controllers/filter";
-import Loading from ".//components/loading";
+import Loading from "./components/loading";
 import MoviesModel from "./models/movies";
 import MoviesStatisticsComponent from "./components/movies-statistics";
 import PageController from "./controllers/page";
