@@ -236,19 +236,17 @@ export default class MovieDetails extends AbstractSmartComponent {
   }
 
   setSubmitHandler(handler) {
-    // const emojiContainer = document.querySelector(`.film-details__add-emoji-label`);
-    // const textField = document.querySelector(`.film-details__comment-input`);
     const form = this.getElement().querySelector(`.film-details__inner`);
+    const textField = this.getElement().querySelector(`.film-details__comment-input`);
     form.addEventListener(`keydown`, (evt) => {
       if (evt.ctrlKey && evt.key === `Enter`) {
         evt.preventDefault();
-
-        // if (emojiContainer.childElementCount === 0) {
-        //   textField.setCustomValidity(`Select an emoji to send.`);
-        // }
-
         handler(new FormData(form));
       }
+    });
+    form.addEventListener(`change`, (evt) => {
+      evt.preventDefault();
+      textField.style.border = ``;
     });
   }
 }
