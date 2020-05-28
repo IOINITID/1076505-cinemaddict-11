@@ -7,7 +7,7 @@ import PageController from "./controllers/page";
 import RatingComponent from "./components/rating";
 import {render, RenderPosition, remove} from "./utils/render";
 
-const AUTHORIZATION = `Basic ekfjdcndjfkrltj`;
+const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const headerElement = document.querySelector(`.header`);
