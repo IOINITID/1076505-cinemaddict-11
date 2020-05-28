@@ -100,7 +100,7 @@ export default class Movies {
         return moviesWatched;
     }
 
-    return moviesWatched.filter((item) => item.watchingDate > date);
+    return moviesWatched.filter((item) => new Date(item.watchingDate) > date);
   }
 
   getRating() {
