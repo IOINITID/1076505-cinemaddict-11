@@ -5,7 +5,7 @@ import {render, remove, replace, RenderPosition} from "../utils/render";
 import API from "../api";
 import Movie from "../models/movie";
 
-const AUTHORIZATION = `Basic ekfjdcndjfkrltj`;
+const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
