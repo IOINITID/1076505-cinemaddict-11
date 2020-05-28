@@ -38,6 +38,11 @@ export default class Sorting extends AbstractComponent {
     });
   }
 
+  setDefaultActiveState() {
+    this._clearActiveState();
+    this.getElement().querySelector(`.sort__button`).classList.add(`sort__button--active`);
+  }
+
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
