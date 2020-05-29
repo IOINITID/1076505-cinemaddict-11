@@ -76,7 +76,7 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   rerender() {
-    this._chart.destroy();
+    super.rerender();
     this._chart = this._renderStatistics();
   }
 
@@ -95,7 +95,11 @@ export default class Statistics extends AbstractSmartComponent {
 
   _renderStatistics() {
     const genres = this._moviesModel.getGenresStatistics(this._filter);
-    this._context = null;
+
+    if (this._chart) {
+      this._chart.destroy();
+      this._context = null;
+    }
 
     this._chart = new Chart(this._getContext(genres), {
       plugins: [ChartDataLabels],
