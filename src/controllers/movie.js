@@ -5,7 +5,7 @@ import {render, remove, replace, RenderPosition} from "../utils/render";
 import API from "../api";
 import Movie from "../models/movie";
 
-const AUTHORIZATION = `Basic ekfjdcndjfkrltj`;
+const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -68,8 +68,6 @@ export default class MovieController {
       if (oldMovie && oldMovieDetails) {
         replace(this._movieComponent, oldMovie);
         replace(this._movieDetailsComponent, oldMovieDetails);
-      } else {
-        render(this._container, this._movieComponent, RenderPosition.BEFOREEND);
       }
     });
 
@@ -80,6 +78,8 @@ export default class MovieController {
     this._movieComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
     this._movieComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
     this._movieComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
+
+    render(this._container, this._movieComponent, RenderPosition.BEFOREEND);
 
     const moviePosterElement = this._movieComponent.getElement().querySelector(`.film-card__poster`);
     const movieTitleElement = this._movieComponent.getElement().querySelector(`.film-card__title`);

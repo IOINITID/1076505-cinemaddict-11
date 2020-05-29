@@ -12,9 +12,9 @@ const StatisticsFilter = {
 const MINUTES_PER_HOUR = 60;
 
 const sortData = (list) => {
-  let sortedData = [];
+  const sortedData = [];
 
-  for (let key in list) {
+  for (const key in list) {
     if (Object.prototype.hasOwnProperty.call(list, key)) {
       sortedData.push([key, list[key]]);
     }
@@ -22,9 +22,9 @@ const sortData = (list) => {
 
   sortedData.sort((a, b) => b[1] - a[1]);
 
-  let resultData = {};
+  const resultData = {};
 
-  for (let id in sortedData) {
+  for (const id in sortedData) {
     if (Object.prototype.hasOwnProperty.call(sortedData, id)) {
       resultData[sortedData[id][0]] = sortedData[id][1];
     }
@@ -75,7 +75,7 @@ export default class Movies {
   }
 
   getMoviesByWatched(timeName = StatisticsFilter.ALL_TIME) {
-    let moviesWatched = this._moviesData.filter((movie) => movie.watched);
+    const moviesWatched = this._moviesData.filter((movie) => movie.watched);
 
     if (timeName === StatisticsFilter.ALL_TIME) {
       return moviesWatched;
@@ -100,7 +100,7 @@ export default class Movies {
         return moviesWatched;
     }
 
-    return moviesWatched.filter((item) => item.watchingDate > date);
+    return moviesWatched.filter((item) => new Date(item.watchingDate) > date);
   }
 
   getRating() {
@@ -119,7 +119,7 @@ export default class Movies {
   }
 
   getGenresStatistics(filter) {
-    let genres = {};
+    const genres = {};
 
     this.getMoviesByWatched(filter).forEach((movie) => {
       movie.genres.forEach((genre) => {
