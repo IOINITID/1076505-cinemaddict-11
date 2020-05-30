@@ -134,6 +134,18 @@ export default class PageController {
     const sortedMoviesByRating = getSortedMovies(moviesData, SortType.RATING, 0, MOVIES_EXTRA_QUANTITY);
     const sortedMoviesByComments = getSortedMovies(moviesData, SortType.COMMENTS, 0, MOVIES_EXTRA_QUANTITY);
 
+    // if (sortedMoviesByRating) {
+    //   renderMovies(moviesListTopRatedContainer, sortedMoviesByRating, this._onDataChange, this._onViewChange);
+    // } else {
+    //   renderMovies(moviesListTopRatedContainer, moviesData.slice(0, 1), this._onDataChange, this._onViewChange);
+    // }
+
+    // if (sortedMoviesByComments) {
+    //   renderMovies(moviesListMostCommentedContainer, sortedMoviesByComments, this._onDataChange, this._onViewChange);
+    // } else {
+    //   renderMovies(moviesListTopRatedContainer, moviesData.slice(0, 1), this._onDataChange, this._onViewChange);
+    // }
+
     renderMovies(moviesListTopRatedContainer, sortedMoviesByRating, this._onDataChange, this._onViewChange);
     renderMovies(moviesListMostCommentedContainer, sortedMoviesByComments, this._onDataChange, this._onViewChange);
   }

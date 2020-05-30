@@ -1,12 +1,12 @@
-import Movie from "../models/movie";
-import {nanoid} from "nanoid";
+// import Movie from "../models/movie";
+// import {nanoid} from "nanoid";
 
-const createStorageStructure = (items) => {
-  return items.reduce((acc, item) => {
-    acc[item.id] = item;
-    return acc;
-  }, {});
-};
+// const createStorageStructure = (items) => {
+//   return items.reduce((acc, item) => {
+//     acc[item.id] = item;
+//     return acc;
+//   }, {});
+// };
 
 export default class Provider {
   constructor(api, store) {
@@ -21,17 +21,10 @@ export default class Provider {
 
   getMovies() {
     if (this._isOnline) {
-      return this._api.getMovies()
-        .then((moviesData) => {
-          const items = createStorageStructure(moviesData.map((movieData) => movieData.toRAW()));
-
-          this._store.setItems(items);
-        });
+      return this._api.getMovies();
     }
 
-    const storeMovies = Object.values(this._store.getItems());
-
-    return Promise.resolve(Movie.parseMovies(storeMovies));
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   getComments(id) {
@@ -44,64 +37,34 @@ export default class Provider {
 
   updateMovie(id, data) {
     if (this._isOnline) {
-      return this._api.updateMovie(id, data)
-        .then((newMovie) => {
-          this._store.setItem(newMovie.id, newMovie.toRAW());
-          return newMovie;
-        });
+      return this._api.updateMovie(id, data);
     }
 
-    const localMovie = Movie.clone(Object.assign(data, {id}));
-
-    this._store.setItem(id, localMovie.toRAW());
-    this._syncIsNeeded = true;
-
-    return Promise.resolve(localMovie);
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   addComment(movieData, commentData) {
     if (this._isOnline) {
-      return this._api.addComment(movieData, commentData)
-        .then((movie, comment) => {
-          this._store.setItem(movie.id, movie.toRAW());
-          this._store.setItem(comment.id, comment.toRAW());
-          return {movie, comment};
-        });
+      return this._api.addComment(movieData, commentData);
     }
 
-    const localNewMovieCommentId = nanoid();
-    const localNewMovieComment = Movie.clone(Object.assign(commentData, {id: localNewMovieCommentId}));
-
-    this._store.setItem(localNewMovieComment.id, localNewMovieComment.toRAW());
-
-    return Promise.resolve(localNewMovieComment);
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   deleteComment(commentId) {
     if (this._isOnline) {
-      return this._api.deleteComment(commentId)
-        .then(() => this._store.removeItem(commentId));
+      return this._api.deleteComment(commentId);
     }
 
-    this._store.removeItem(commentId);
-
-    return Promise.resolve();
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   sync() {
     if (this._isOnline) {
-      const storeMovies = Object.values(this._store.getItems());
-
-      return this._api.sync(storeMovies)
-        .then((response) => {
-          const updatedMovies = createStorageStructure(response.updated);
-
-          this._storage.setItems(updatedMovies);
-          this._syncIsNeeded = false;
-        });
+      return this._api.sync();
     }
 
-    return Promise.reject(new Error(`Sync data failed`));
+    return Promise.reject(`offline logic is not implemented`);
   }
 
   _isOnline() {
