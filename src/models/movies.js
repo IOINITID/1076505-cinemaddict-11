@@ -22,8 +22,6 @@ const sortData = (list) => {
     }
   }
 
-  // console.log(resultData);
-
   return resultData;
 };
 

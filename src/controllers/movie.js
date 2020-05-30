@@ -1,13 +1,18 @@
 import API from "../api/index";
+import Provider from "../api/provider";
+import Store from "../api/store";
 import CommentsModel from "../models/comments";
 import Movie from "../models/movie";
 import MovieComponent from "../components/movie";
 import MovieDetailsComponent from "../components/movie-details";
-import Provider from "../api/provider";
 import {render, remove, replace, RenderPosition} from "../utils/render";
 
 const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
@@ -28,7 +33,8 @@ export default class MovieController {
 
     this._commentsModel = new CommentsModel();
     this._api = new API(AUTHORIZATION, END_POINT);
-    this._apiWithProvider = new Provider(this._api);
+    this._store = new Store(STORE_NAME, window.localStorage);
+    this._apiWithProvider = new Provider(this._api, this._store);
 
     this._movieData = null;
     this._commentData = null;
