@@ -1,10 +1,6 @@
 import Movie from "../models/movie";
 import {nanoid} from "nanoid";
 
-const isOnline = () => {
-  return window.navigator.onLine;
-};
-
 const createStorageStructure = (items) => {
   return items.reduce((acc, item) => {
     acc[item.id] = item;
@@ -24,7 +20,7 @@ export default class Provider {
   }
 
   getMovies() {
-    if (isOnline()) {
+    if (this._isOnline) {
       return this._api.getMovies()
         .then((moviesData) => {
           const items = createStorageStructure(moviesData.map((movieData) => movieData.toRAW()));
@@ -39,7 +35,7 @@ export default class Provider {
   }
 
   getComments(id) {
-    if (isOnline()) {
+    if (this._isOnline) {
       return this._api.getComments(id);
     }
 
@@ -47,11 +43,10 @@ export default class Provider {
   }
 
   updateMovie(id, data) {
-    if (isOnline()) {
-      return this._api.updateTask(id, data)
+    if (this._isOnline) {
+      return this._api.updateMovie(id, data)
         .then((newMovie) => {
           this._store.setItem(newMovie.id, newMovie.toRAW());
-          this._syncIsNeeded = true;
           return newMovie;
         });
     }
@@ -59,12 +54,13 @@ export default class Provider {
     const localMovie = Movie.clone(Object.assign(data, {id}));
 
     this._store.setItem(id, localMovie.toRAW());
+    this._syncIsNeeded = true;
 
     return Promise.resolve(localMovie);
   }
 
   addComment(movieData, commentData) {
-    if (isOnline()) {
+    if (this._isOnline) {
       return this._api.addComment(movieData, commentData)
         .then((movie, comment) => {
           this._store.setItem(movie.id, movie.toRAW());
@@ -82,7 +78,7 @@ export default class Provider {
   }
 
   deleteComment(commentId) {
-    if (isOnline()) {
+    if (this._isOnline) {
       return this._api.deleteComment(commentId)
         .then(() => this._store.removeItem(commentId));
     }
@@ -93,7 +89,7 @@ export default class Provider {
   }
 
   sync() {
-    if (isOnline()) {
+    if (this._isOnline) {
       const storeMovies = Object.values(this._store.getItems());
 
       return this._api.sync(storeMovies)
@@ -106,5 +102,9 @@ export default class Provider {
     }
 
     return Promise.reject(new Error(`Sync data failed`));
+  }
+
+  _isOnline() {
+    return window.navigator.onLine;
   }
 }

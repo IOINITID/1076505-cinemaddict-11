@@ -1,4 +1,4 @@
-const CACHE_PREFIX = `cinemaddict-cache`;
+const CACHE_PREFIX = `cinemaddict`;
 const CACHE_VER = `v1`;
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
 
