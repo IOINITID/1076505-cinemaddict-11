@@ -1,23 +1,29 @@
-export const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
-};
-
-export const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
+import {RatingLevel} from "../const";
 
 export const getFirstSymbolUpperCase = (filterName) => {
   let filterNameUpperCase = ``;
 
-  for (let i = 0; i < filterName.length; i++) {
-    if (i === 0) {
-      filterNameUpperCase += filterName[i].toUpperCase();
+  for (const char of filterName) {
+    if (char === filterName[0]) {
+      filterNameUpperCase += char.toUpperCase();
     } else {
-      filterNameUpperCase += filterName[i];
+      filterNameUpperCase += char;
     }
   }
 
   return filterNameUpperCase;
+};
+
+export const getRating = (moviesWatched) => {
+  const moviesQuantity = moviesWatched.filter((movieData) => movieData.watched).length;
+
+  if (moviesQuantity > 0 && moviesQuantity <= 10) {
+    return RatingLevel.NOVICE;
+  } else if (moviesQuantity > 10 && moviesQuantity <= 20) {
+    return RatingLevel.FAN;
+  } else if (moviesQuantity >= 21) {
+    return RatingLevel.MOVIEBUFF;
+  }
+
+  return ``;
 };

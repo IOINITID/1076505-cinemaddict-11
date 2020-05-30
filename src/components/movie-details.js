@@ -1,11 +1,46 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import moment from "moment";
+import momentDurationFormatSetup from 'moment-duration-format';
 import {encode} from "he";
 
+momentDurationFormatSetup(moment);
+
 const createMovieDetailsTemplate = (movieData, commentData) => {
-  const {image, age, title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, inWatchlist, watched, favorite} = movieData;
-  const moviePoster = {image, age};
-  const movieInfo = {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description};
+  const {
+    image,
+    age,
+    title,
+    originalTitle,
+    rating,
+    director,
+    writers,
+    actors,
+    releaseDate,
+    runtime,
+    country,
+    genres,
+    description,
+    inWatchlist,
+    watched,
+    favorite
+  } = movieData;
+  const moviePoster = {
+    image,
+    age
+  };
+  const movieInfo = {
+    title,
+    originalTitle,
+    rating,
+    director,
+    writers,
+    actors,
+    releaseDate,
+    runtime,
+    country,
+    genres,
+    description
+  };
 
   return (
     `<section class="film-details">
@@ -36,20 +71,35 @@ const createMovieDetailsTemplate = (movieData, commentData) => {
 };
 
 const createMovieDetailsPosterTemplate = (moviePoster) => {
-  const {image, age} = moviePoster;
+  const {
+    image,
+    age
+  } = moviePoster;
 
   return (
     `<div class="film-details__poster">
       <img class="film-details__poster-img" src="./${image}" alt="">
-      <p class="film-details__age">${age}</p>
+      <p class="film-details__age">${age}+</p>
     </div>`
   );
 };
 
 const createFilmDetailsInfo = (movieInfo) => {
-  const {title, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description} = movieInfo;
+  const {
+    title,
+    originalTitle,
+    rating,
+    director,
+    writers,
+    actors,
+    releaseDate,
+    runtime,
+    country,
+    genres,
+    description
+  } = movieInfo;
   const movieReleaseDate = moment(releaseDate).format(`DD MMMM YYYY`);
-  const movieRuntime = moment(runtime).format(`h[h] mm[m]`);
+  const movieRuntime = moment.duration(runtime, `minutes`).format(`h[h] mm[m]`);
   const movieGenres = genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(`\n`);
   const movieGenreTitle = (genres.length > 1) ? `Genres` : `Genre`;
 
@@ -103,8 +153,14 @@ const createMovieDetailsCommentsTemplate = (movieComments) => {
   const movieCommentsQuantity = movieComments.length;
   const getMovieComments = () => {
     return movieComments.map((movieComment) => {
-      const {id, emoji, text: notSanitizedComment, author, date} = movieComment;
-      const commentDate = moment(date).format(`YYYY/MM/DD hh:mm`);
+      const {
+        id,
+        emoji,
+        text: notSanitizedComment,
+        author,
+        date
+      } = movieComment;
+      const commentDate = moment(date).fromNow();
       const currentText = notSanitizedComment ? encode(notSanitizedComment) : ``;
 
       return (
@@ -204,6 +260,41 @@ export default class MovieDetails extends AbstractSmartComponent {
     this._setMarkAsFavoriteButtonClickHandler = handler;
   }
 
+  setCommentDeleteHandler(handler) {
+    // const deleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    // deleteButton.forEach((button) => {
+    //   button.addEventListener(`click`, () => {
+    //     button.textContent = `Deleting...`;
+    //     button.disabled = true;
+    //   });
+    // });
+
+    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      if (evt.target.id === evt.target.dataset.id) {
+        handler(evt.target.dataset.id);
+      }
+    });
+  }
+
+  setSubmitHandler(handler) {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const textField = this.getElement().querySelector(`.film-details__comment-input`);
+
+    form.addEventListener(`keydown`, (evt) => {
+      if (evt.ctrlKey && evt.key === `Enter`) {
+        evt.preventDefault();
+        handler(new FormData(form));
+      }
+    });
+
+    form.addEventListener(`change`, (evt) => {
+      evt.preventDefault();
+      textField.style.border = ``;
+    });
+  }
+
   _setEmoji() {
     const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
     const emoji = this.getElement().querySelectorAll(`.film-details__emoji-item`);
@@ -223,30 +314,6 @@ export default class MovieDetails extends AbstractSmartComponent {
 
         emojiContainer.appendChild(emojiImage);
       });
-    });
-  }
-
-  setCommentDeleteHandler(handler) {
-    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      if (evt.target.id === evt.target.dataset.id) {
-        handler(evt.target.dataset.id);
-      }
-    });
-  }
-
-  setSubmitHandler(handler) {
-    const form = this.getElement().querySelector(`.film-details__inner`);
-    const textField = this.getElement().querySelector(`.film-details__comment-input`);
-    form.addEventListener(`keydown`, (evt) => {
-      if (evt.ctrlKey && evt.key === `Enter`) {
-        evt.preventDefault();
-        handler(new FormData(form));
-      }
-    });
-    form.addEventListener(`change`, (evt) => {
-      evt.preventDefault();
-      textField.style.border = ``;
     });
   }
 }

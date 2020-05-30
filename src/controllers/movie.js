@@ -1,9 +1,10 @@
+import API from "../api/index";
+import CommentsModel from "../models/comments";
+import Movie from "../models/movie";
 import MovieComponent from "../components/movie";
 import MovieDetailsComponent from "../components/movie-details";
-import CommentsModel from "../models/comments";
+import Provider from "../api/provider";
 import {render, remove, replace, RenderPosition} from "../utils/render";
-import API from "../api";
-import Movie from "../models/movie";
 
 const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
@@ -27,6 +28,7 @@ export default class MovieController {
 
     this._commentsModel = new CommentsModel();
     this._api = new API(AUTHORIZATION, END_POINT);
+    this._apiWithProvider = new Provider(this._api);
 
     this._movieData = null;
     this._commentData = null;
@@ -51,7 +53,7 @@ export default class MovieController {
   render(movieData) {
     this._movieData = movieData;
 
-    this._api.getComments(this._movieData.id)
+    this._apiWithProvider.getComments(this._movieData.id)
     .then((commentsData) => {
       this._commentsModel.setComments(commentsData);
       this._commentData = this._commentsModel.getComments();
@@ -99,11 +101,25 @@ export default class MovieController {
   }
 
   shake() {
-    this._movieDetailsComponent.getElement().querySelector(`.film-details__new-comment`).style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    const newCommentElement = this._movieDetailsComponent.getElement().querySelector(`.film-details__new-comment`);
+
+    newCommentElement.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
     setTimeout(() => {
-      this._movieDetailsComponent.getElement().querySelector(`.film-details__new-comment`).style.animation = ``;
+      newCommentElement.style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._removeMovieDetails();
+    }
+  }
+
+  destroy() {
+    remove(this._movieDetailsComponent);
+    remove(this._movieComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _onDataChangeHandler() {
@@ -121,7 +137,7 @@ export default class MovieController {
     const emojiList = this._movieDetailsComponent.getElement().querySelectorAll(`.film-details__emoji-item`);
     const textField = this._movieDetailsComponent.getElement().querySelector(`.film-details__comment-input`);
 
-    this._api.addComment(this._movieData, commentFormData)
+    this._apiWithProvider.addComment(this._movieData, commentFormData)
       .then(() => {
         emojiList.forEach((item) => {
           item.disabled = true;
@@ -141,29 +157,11 @@ export default class MovieController {
   }
 
   _onCommentDelete(id) {
-    const deleteButton = this._movieDetailsComponent.getElement().querySelectorAll(`.film-details__comment-delete`);
-
-    deleteButton.forEach((button) => {
-      button.addEventListener(`click`, (evt) => {
-        if (evt.target === button) {
-          button.textContent = `Deleting...`;
-          button.disabled = true;
-        }
-      });
-    });
-
-    this._api.deleteComment(id)
+    this._apiWithProvider.deleteComment(id)
     .then(() => {
       this._commentsModel.deleteComment(id);
     })
     .catch(() => {
-      deleteButton.forEach((button) => {
-        button.addEventListener(`click`, (evt) => {
-          if (evt.target === button) {
-            button.disabled = false;
-          }
-        });
-      });
       this.shake();
     });
   }
@@ -187,18 +185,6 @@ export default class MovieController {
     const movieData = Movie.clone(this._movieData);
     movieData.favorite = !movieData.favorite;
     this._onDataChange(this, this._movieData, movieData);
-  }
-
-  setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._removeMovieDetails();
-    }
-  }
-
-  destroy() {
-    remove(this._movieDetailsComponent);
-    remove(this._movieComponent);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _removeMovieDetails() {

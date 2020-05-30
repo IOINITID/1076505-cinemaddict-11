@@ -1,10 +1,10 @@
+import MovieController from "../controllers/movie";
 import MoviesComponent from "../components/movies";
+import MoviesMostCommented from "../components/movies-most-commented";
+import MoviesTopRated from "../components/movies-top-rated";
 import NoMoviesComponent from "../components/no-movies";
 import ShowMoreButtonComponent from "../components/show-more-button";
-import MoviesTopRated from "../components/movies-top-rated";
-import MoviesMostCommented from "../components/movies-most-commented";
 import SortingComponent, {SortType} from "../components/sorting";
-import MovieController from "../controllers/movie";
 import {render, remove, RenderPosition} from "../utils/render";
 
 const MOVIES_QUANTITY_ON_START = 5;
@@ -96,6 +96,16 @@ export default class PageController {
     render(moviesElement, this._moviesMostCommented, RenderPosition.BEFOREEND);
 
     this._renderMoviesExtra(moviesData);
+  }
+
+  hide() {
+    this._sortingComponent.hide();
+    this._moviesComponent.hide();
+  }
+
+  show() {
+    this._sortingComponent.show();
+    this._moviesComponent.show();
   }
 
   _removeMovies() {
@@ -195,15 +205,5 @@ export default class PageController {
   _onFilterChange() {
     this._updateMovies(MOVIES_QUANTITY_ON_START);
     this._sortingComponent.setDefaultActiveState();
-  }
-
-  hide() {
-    this._sortingComponent.hide();
-    this._moviesComponent.hide();
-  }
-
-  show() {
-    this._sortingComponent.show();
-    this._moviesComponent.show();
   }
 }

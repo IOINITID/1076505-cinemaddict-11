@@ -1,10 +1,13 @@
 import AbstractComponent from "./abstract-component";
 import moment from "moment";
+import momentDurationFormatSetup from 'moment-duration-format';
+
+momentDurationFormatSetup(moment);
 
 const createMovieTemplate = (movieData) => {
   const {image, title, rating, releaseDate, runtime, description, genres, comments, inWatchlist, watched, favorite} = movieData;
   const movieReleaseDate = moment(releaseDate).format(`YYYY`);
-  const movieRuntime = moment(runtime).format(`h[h] mm[m]`);
+  const movieRuntime = moment.duration(runtime, `minutes`).format(`h[h] mm[m]`);
   const movieGenres = genres.map((genre) => genre).join(`, `);
   const movieDescription = (description.length > 140) ? `${description.slice(0, 140)}...` : description;
   const movieComments = comments.length;

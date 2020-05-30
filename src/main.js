@@ -1,4 +1,5 @@
-import API from "./api";
+import API from "./api/index";
+import Provider from "./api/provider";
 import FilterController from "./controllers/filter";
 import Loading from "./components/loading";
 import MoviesModel from "./models/movies";
@@ -15,8 +16,9 @@ const mainElement = document.querySelector(`.main`);
 const statisticsElement = document.querySelector(`.footer__statistics`);
 
 const api = new API(AUTHORIZATION, END_POINT);
+const apiWithProvider = new Provider(api);
 const moviesModel = new MoviesModel();
-const pageController = new PageController(mainElement, moviesModel, api);
+const pageController = new PageController(mainElement, moviesModel, apiWithProvider);
 const filterController = new FilterController(mainElement, moviesModel);
 const loading = new Loading();
 
@@ -35,6 +37,6 @@ const afterLoading = (data) => {
   pageController.render(moviesData);
 };
 
-api.getMovies()
+apiWithProvider.getMovies()
   .then((data) => afterLoading(data))
   .catch(() => afterLoading([]));

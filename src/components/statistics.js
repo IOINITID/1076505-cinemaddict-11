@@ -1,7 +1,8 @@
+import AbstractSmartComponent from "./abstract-smart-component";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import AbstractSmartComponent from "./abstract-smart-component";
-import {StatsFilter} from "../const";
+import {getRating} from "../utils/common";
+import {StatisticsFilter} from "../const";
 
 const BAR_HEIGHT = 50;
 
@@ -13,7 +14,7 @@ const createStatisticsTemplate = (moviesModel, filter) => {
       <p class="statistic__rank">
         Your rank
         <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-        <span class="statistic__rank-label">${moviesModel.getRating()}</span>
+        <span class="statistic__rank-label">${getRating(moviesModel.getMovies())}</span>
       </p>
       <form action="https://echo.htmlacademy.ru" method="get" class="statistic__filters">
         <p class="statistic__filters-description">Show stats:</p>
@@ -63,7 +64,7 @@ export default class Statistics extends AbstractSmartComponent {
   constructor(moviesModel) {
     super();
 
-    this._filter = StatsFilter.ALL_TIME;
+    this._filter = StatisticsFilter.ALL_TIME;
     this._moviesModel = moviesModel;
   }
 
@@ -83,6 +84,15 @@ export default class Statistics extends AbstractSmartComponent {
   render() {
     this._chart = this._renderStatistics();
     this.addFilterChangeHandler();
+  }
+
+  addFilterChangeHandler() {
+    this.getElement().querySelectorAll(`.statistic__filters-input`).forEach((element) => {
+      element.addEventListener(`change`, (evt) => {
+        this._filter = evt.target.value;
+        this.rerender();
+      });
+    });
   }
 
   _getContext(genres) {
@@ -158,14 +168,5 @@ export default class Statistics extends AbstractSmartComponent {
     });
 
     return this._chart;
-  }
-
-  addFilterChangeHandler() {
-    this.getElement().querySelectorAll(`.statistic__filters-input`).forEach((element) => {
-      element.addEventListener(`change`, (evt) => {
-        this._filter = evt.target.value;
-        this.rerender();
-      });
-    });
   }
 }
