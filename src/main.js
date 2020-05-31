@@ -47,11 +47,7 @@ apiWithProvider.getMovies()
   .catch(() => afterLoading([]));
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`./sw.js`)
-    .then(() => {})
-    .catch((error) => {
-      throw error;
-    });
+  navigator.serviceWorker.register(`./sw.js`);
 });
 
 window.addEventListener(`online`, () => {
