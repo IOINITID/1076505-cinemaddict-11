@@ -5,6 +5,7 @@ const getSyncedMovies = (items) => {
     .map(({payload}) => payload.movie);
 };
 
+
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
