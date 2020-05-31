@@ -267,6 +267,15 @@ export default class MovieDetails extends AbstractSmartComponent {
         handler(evt.target.dataset.id);
       }
     });
+
+    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    deleteButtons.forEach((button) => {
+      button.addEventListener(`click`, () => {
+        button.textContent = `Deleting...`;
+        button.disabled = true;
+      });
+    });
   }
 
   setSubmitHandler(handler) {
