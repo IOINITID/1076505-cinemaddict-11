@@ -5,7 +5,6 @@ const getSyncedMovies = (items) => {
     .map(({payload}) => payload.movie);
 };
 
-
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
@@ -42,7 +41,7 @@ export default class Provider {
       return this._api.getComments(id);
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    return Promise.resolve(this._store.getItems());
   }
 
   updateMovie(id, data) {

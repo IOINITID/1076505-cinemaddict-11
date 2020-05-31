@@ -7,7 +7,7 @@ import MovieComponent from "../components/movie";
 import MovieDetailsComponent from "../components/movie-details";
 import {render, remove, replace, RenderPosition} from "../utils/render";
 
-const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
+const AUTHORIZATION = `Basic ekfjdcndjfkrltj5`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const STORE_PREFIX = `cinemaddict-localstorage`;

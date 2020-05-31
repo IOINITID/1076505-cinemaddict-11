@@ -1,4 +1,3 @@
-
 import MovieController from "../controllers/movie";
 import MoviesComponent from "../components/movies";
 import MoviesMostCommented from "../components/movies-most-commented";

@@ -9,7 +9,7 @@ import PageController from "./controllers/page";
 import RatingComponent from "./components/rating";
 import {render, RenderPosition, remove} from "./utils/render";
 
-const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
+const AUTHORIZATION = `Basic ekfjdcndjfkrltj5`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const STORE_PREFIX = `cinemaddict-localstorage`;
 const STORE_VER = `v1`;
