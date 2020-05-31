@@ -48,10 +48,19 @@ export default class Provider {
 
   updateMovie(id, data) {
     if (this._isOnline) {
-      return this._api.updateMovie(id, data);
+      return this._api.updateMovie(id, data)
+      .then((newMovie) => {
+        this._storeMovies.setItem(newMovie.id, newMovie.toRAW());
+
+        return newMovie;
+      });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const localMovie = Movie.clone(Object.assign(data, {id}));
+
+    this._storeMovies.setItem(id, localMovie.toRAW());
+
+    return Promise.resolve(localMovie);
   }
 
   addComment(movieData, commentData) {
