@@ -1,10 +1,10 @@
 import Movie from "../models/movie";
 // import {nanoid} from "nanoid";
 
-const getSyncedTasks = (items) => {
-  return items.filter(({success}) => success)
-    .map(({payload}) => payload.task);
-};
+// const getSyncedTasks = (items) => {
+//   return items.filter(({success}) => success)
+//     .map(({payload}) => payload.task);
+// };
 
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
