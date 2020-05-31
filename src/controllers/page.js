@@ -92,8 +92,16 @@ export default class PageController {
     this._renderMovies(moviesData.slice(0, this._moviesQuantityToShow));
     this._renderShowMoreButton();
 
-    render(moviesElement, this._moviesTopRated, RenderPosition.BEFOREEND);
-    render(moviesElement, this._moviesMostCommented, RenderPosition.BEFOREEND);
+    const ratingInfo = this._moviesModel.getMovies().slice().filter((item) => item.rating > 0);
+    const commentsInfo = this._moviesModel.getMovies().slice().filter((item) => item.comments.length > 0);
+
+    if (ratingInfo.length > 0) {
+      render(moviesElement, this._moviesTopRated, RenderPosition.BEFOREEND);
+    }
+
+    if (commentsInfo.length > 0) {
+      render(moviesElement, this._moviesMostCommented, RenderPosition.BEFOREEND);
+    }
 
     this._renderMoviesExtra(moviesData);
   }
@@ -128,20 +136,20 @@ export default class PageController {
   _renderMoviesExtra(moviesData) {
     const moviesElement = this._container.querySelector(`.films`);
     const moviesExtraElement = moviesElement.querySelectorAll(`.films-list--extra`);
-    const moviesListTopRatedContainer = moviesExtraElement[0].querySelector(`.films-list__container`);
-    const moviesListMostCommentedContainer = moviesExtraElement[1].querySelector(`.films-list__container`);
-
-    const sortedMoviesByRating = getSortedMovies(moviesData, SortType.RATING, 0, MOVIES_EXTRA_QUANTITY);
-    const sortedMoviesByComments = getSortedMovies(moviesData, SortType.COMMENTS, 0, MOVIES_EXTRA_QUANTITY);
 
     const ratingInfo = moviesData.filter((item) => item.rating > 0);
-    const commentsInfo = moviesData.filter((item) => item.comments > 0);
+    const commentsInfo = moviesData.filter((item) => item.comments.length > 0);
+
+    const sortedMoviesByRating = getSortedMovies(ratingInfo, SortType.RATING, 0, MOVIES_EXTRA_QUANTITY);
+    const sortedMoviesByComments = getSortedMovies(commentsInfo, SortType.COMMENTS, 0, MOVIES_EXTRA_QUANTITY);
 
     if (ratingInfo.length > 0) {
+      const moviesListTopRatedContainer = moviesExtraElement[0].querySelector(`.films-list__container`);
       renderMovies(moviesListTopRatedContainer, sortedMoviesByRating, this._onDataChange, this._onViewChange);
     }
 
     if (commentsInfo.length > 0) {
+      const moviesListMostCommentedContainer = moviesExtraElement[1].querySelector(`.films-list__container`);
       renderMovies(moviesListMostCommentedContainer, sortedMoviesByComments, this._onDataChange, this._onViewChange);
     }
   }
