@@ -1,30 +1,41 @@
-// import Movie from "../models/movie";
+import Movie from "../models/movie";
 // import {nanoid} from "nanoid";
 
-// const createStorageStructure = (items) => {
-//   return items.reduce((acc, item) => {
-//     acc[item.id] = item;
-//     return acc;
-//   }, {});
-// };
+const getSyncedTasks = (items) => {
+  return items.filter(({success}) => success)
+    .map(({payload}) => payload.task);
+};
+
+const createStoreStructure = (items) => {
+  return items.reduce((acc, current) => {
+    return Object.assign({}, acc, {
+      [current.id]: current,
+    });
+  }, {});
+};
 
 export default class Provider {
-  constructor(api, store) {
+  constructor(api, storeMovies, storeComments) {
     this._api = api;
-    this._store = store;
-    this._syncIsNeeded = false;
-  }
-
-  getSyncIsNeeded() {
-    return this._syncIsNeeded;
+    this._storeMovies = storeMovies;
+    this._storeComments = storeComments;
   }
 
   getMovies() {
     if (this._isOnline) {
-      return this._api.getMovies();
+      return this._api.getMovies()
+      .then((moviesData) => {
+        const items = createStoreStructure(moviesData.map((movieData) => movieData.toRAW()));
+
+        this._storeMovies.setItems(items);
+
+        return moviesData;
+      });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const storeMovies = Object.values(this._storeMovies.getItems());
+
+    return Promise.resolve(Movie.parseMovies(storeMovies));
   }
 
   getComments(id) {

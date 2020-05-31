@@ -12,9 +12,11 @@ export default class Store {
     }
   }
 
-  getItem(id) {
-    const store = this.getItems();
-    return store[id];
+  setItems(items) {
+    this._storage.setItem(
+        this._storeKey,
+        JSON.stringify(items)
+    );
   }
 
   setItem(key, value) {
@@ -23,20 +25,16 @@ export default class Store {
     this._storage.setItem(
         this._storeKey,
         JSON.stringify(
-            Object.assign({}, store, {[key]: value})
+            Object.assign({}, store, {
+              [key]: value
+            })
         )
-    );
-  }
-
-  setItems(items) {
-    this._storage.setItem(
-        this._storeKey,
-        JSON.stringify(items)
     );
   }
 
   removeItem(key) {
     const store = this.getItems();
+
     delete store[key];
 
     this._storage.setItem(
