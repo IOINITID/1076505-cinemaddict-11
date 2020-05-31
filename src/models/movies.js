@@ -4,23 +4,11 @@ import {getMoviesByFilter} from "../utils/filter";
 const MINUTES_PER_HOUR = 60;
 
 const sortData = (list) => {
-  const sortedData = [];
-
-  for (const key in list) {
-    if (Object.prototype.hasOwnProperty.call(list, key)) {
-      sortedData.push([key, list[key]]);
-    }
-  }
-
-  sortedData.sort((a, b) => b[1] - a[1]);
-
   const resultData = {};
 
-  for (const id in sortedData) {
-    if (Object.prototype.hasOwnProperty.call(sortedData, id)) {
-      resultData[sortedData[id][0]] = sortedData[id][1];
-    }
-  }
+  Object.entries(list).sort((a, b) => b[1] - a[1]).forEach((item) => {
+    resultData[item[0]] = item[1];
+  });
 
   return resultData;
 };

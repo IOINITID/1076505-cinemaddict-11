@@ -1,3 +1,4 @@
+
 import MovieController from "../controllers/movie";
 import MoviesComponent from "../components/movies";
 import MoviesMostCommented from "../components/movies-most-commented";
@@ -44,10 +45,10 @@ const getSortedMovies = (moviesData, sortType, from, to) => {
 };
 
 export default class PageController {
-  constructor(container, moviesModel, api) {
+  constructor(container, moviesModel, apiWithProvider) {
     this._container = container;
     this._moviesModel = moviesModel;
-    this._api = api;
+    this._apiWithProvider = apiWithProvider;
 
     this._moviesData = [];
     this._showedMovieControllers = [];
@@ -167,7 +168,7 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    this._api.updateMovie(oldData.id, newData)
+    this._apiWithProvider.updateMovie(oldData.id, newData)
       .then((movieData) => {
         const isSuccess = this._moviesModel.updateMovie(oldData.id, movieData);
 

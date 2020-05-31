@@ -60,24 +60,24 @@ export default class MovieController {
     this._movieData = movieData;
 
     this._apiWithProvider.getComments(this._movieData.id)
-    .then((commentsData) => {
-      this._commentsModel.setComments(commentsData);
-      this._commentData = this._commentsModel.getComments();
+      .then((commentsData) => {
+        this._commentsModel.setComments(commentsData);
+        this._commentData = this._commentsModel.getComments();
 
-      this._movieDetailsComponent = new MovieDetailsComponent(this._movieData, this._commentData);
+        this._movieDetailsComponent = new MovieDetailsComponent(this._movieData, this._commentData);
 
-      this._movieDetailsComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
-      this._movieDetailsComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
-      this._movieDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
-      this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
-      this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
-      this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
+        this._movieDetailsComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
+        this._movieDetailsComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
+        this._movieDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
+        this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
+        this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
+        this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
 
-      if (oldMovie && oldMovieDetails) {
-        replace(this._movieComponent, oldMovie);
-        replace(this._movieDetailsComponent, oldMovieDetails);
-      }
-    });
+        if (oldMovie && oldMovieDetails) {
+          replace(this._movieComponent, oldMovie);
+          replace(this._movieDetailsComponent, oldMovieDetails);
+        }
+      });
 
     const oldMovie = this._movieComponent;
     const oldMovieDetails = this._movieDetailsComponent;
@@ -162,14 +162,15 @@ export default class MovieController {
       });
   }
 
-  _onCommentDelete(id) {
+  _onCommentDelete(id, errorCallback) {
     this._apiWithProvider.deleteComment(id)
-    .then(() => {
-      this._commentsModel.deleteComment(id);
-    })
-    .catch(() => {
-      this.shake();
-    });
+      .then(() => {
+        this._commentsModel.deleteComment(id);
+      })
+      .catch(() => {
+        errorCallback();
+        this.shake();
+      });
   }
 
   _onInWatchlistDataChange(evt) {

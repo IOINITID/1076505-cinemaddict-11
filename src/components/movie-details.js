@@ -221,6 +221,8 @@ export default class MovieDetails extends AbstractSmartComponent {
     this._commentData = commentData;
 
     this._setEmoji();
+    this._setOnline();
+    this._setOffline();
   }
 
   getTemplate() {
@@ -264,17 +266,13 @@ export default class MovieDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
       if (evt.target.id === evt.target.dataset.id) {
-        handler(evt.target.dataset.id);
+        evt.target.textContent = `Deleting...`;
+        evt.target.disbled = true;
+        handler(evt.target.dataset.id, () => {
+          evt.target.textContent = `Delete`;
+          evt.target.disbled = false;
+        });
       }
-    });
-
-    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
-
-    deleteButtons.forEach((button) => {
-      button.addEventListener(`click`, () => {
-        button.textContent = `Deleting...`;
-        button.disabled = true;
-      });
     });
   }
 
@@ -292,6 +290,32 @@ export default class MovieDetails extends AbstractSmartComponent {
     form.addEventListener(`change`, (evt) => {
       evt.preventDefault();
       textField.style.border = ``;
+    });
+  }
+
+  _setOffline() {
+    window.addEventListener(`offline`, () => {
+      const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
+      const emojiItems = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+      commentInput.disabled = true;
+
+      emojiItems.forEach((item) => {
+        item.disabled = true;
+      });
+    });
+  }
+
+  _setOnline() {
+    window.addEventListener(`online`, () => {
+      const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
+      const emojiItems = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+      commentInput.disabled = false;
+
+      emojiItems.forEach((item) => {
+        item.disabled = false;
+      });
     });
   }
 

@@ -20,7 +20,7 @@ export default class Provider {
   }
 
   getMovies() {
-    if (this._isOnline) {
+    if (this._isOnline()) {
       return this._api.getMovies()
       .then((moviesData) => {
         const items = createStoreStructure(moviesData.map((movieData) => movieData.toRAW()));
@@ -37,8 +37,7 @@ export default class Provider {
   }
 
   getComments(id) {
-
-    if (this._isOnline) {
+    if (this._isOnline()) {
       return this._api.getComments(id);
     }
 
@@ -46,7 +45,7 @@ export default class Provider {
   }
 
   updateMovie(id, data) {
-    if (this._isOnline) {
+    if (this._isOnline()) {
       return this._api.updateMovie(id, data)
       .then((newMovie) => {
         this._store.setItem(newMovie.id, newMovie.toRAW());
@@ -63,7 +62,7 @@ export default class Provider {
   }
 
   addComment(movieData, commentData) {
-    if (this._isOnline) {
+    if (this._isOnline()) {
       return this._api.addComment(movieData, commentData);
     }
 
@@ -71,7 +70,7 @@ export default class Provider {
   }
 
   deleteComment(commentId) {
-    if (this._isOnline) {
+    if (this._isOnline()) {
       return this._api.deleteComment(commentId);
     }
 
@@ -79,7 +78,7 @@ export default class Provider {
   }
 
   sync() {
-    if (this._isOnline) {
+    if (this._isOnline()) {
       const storeMovies = Object.values(this._store.getItems());
 
       return this._api.sync(storeMovies)
