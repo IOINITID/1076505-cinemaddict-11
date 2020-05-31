@@ -1,4 +1,6 @@
-import API from "./api";
+import API from "./api/index";
+import Provider from "./api/provider";
+import Store from "./api/store";
 import FilterController from "./controllers/filter";
 import Loading from "./components/loading";
 import MoviesModel from "./models/movies";
@@ -9,14 +11,19 @@ import {render, RenderPosition, remove} from "./utils/render";
 
 const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const statisticsElement = document.querySelector(`.footer__statistics`);
 
 const api = new API(AUTHORIZATION, END_POINT);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const moviesModel = new MoviesModel();
-const pageController = new PageController(mainElement, moviesModel, api);
+const pageController = new PageController(mainElement, moviesModel, apiWithProvider);
 const filterController = new FilterController(mainElement, moviesModel);
 const loading = new Loading();
 
@@ -35,6 +42,19 @@ const afterLoading = (data) => {
   pageController.render(moviesData);
 };
 
-api.getMovies()
+apiWithProvider.getMovies()
   .then((data) => afterLoading(data))
   .catch(() => afterLoading([]));
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`./sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

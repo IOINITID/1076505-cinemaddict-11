@@ -32,12 +32,6 @@ export default class Sorting extends AbstractComponent {
     return this._currentSortType;
   }
 
-  _clearActiveState() {
-    this.getElement().querySelectorAll(`.sort__button`).forEach((button) => {
-      button.classList.remove(`sort__button--active`);
-    });
-  }
-
   setDefaultActiveState() {
     this._clearActiveState();
     this.getElement().querySelector(`.sort__button`).classList.add(`sort__button--active`);
@@ -64,6 +58,12 @@ export default class Sorting extends AbstractComponent {
       this._currentSortType = sortType;
 
       handler(this._currentSortType);
+    });
+  }
+
+  _clearActiveState() {
+    this.getElement().querySelectorAll(`.sort__button`).forEach((button) => {
+      button.classList.remove(`sort__button--active`);
     });
   }
 }

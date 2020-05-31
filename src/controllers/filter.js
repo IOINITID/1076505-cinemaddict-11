@@ -1,8 +1,8 @@
 import FilterComponent from "../components/filter";
 import StatisticsComponent from "../components/statistics";
 import {FilterType} from "../const";
-import {render, replace, RenderPosition} from "../utils/render";
 import {getMoviesByFilter} from "../utils/filter";
+import {render, replace, RenderPosition} from "../utils/render";
 
 export default class FilterController {
   constructor(container, moviesModel) {
@@ -76,6 +76,14 @@ export default class FilterController {
     });
   }
 
+  setOnStatisticsClickHangler(handler) {
+    this._onStatisticsClickHanglers.push(handler);
+  }
+
+  setOnFilterClickHangler(handler) {
+    this._onFilterClickHandlers.push(handler);
+  }
+
   _onFilterChange(filterType) {
     this._moviesModel.setFilter(filterType);
     this._activeFilterType = filterType;
@@ -88,13 +96,5 @@ export default class FilterController {
 
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
-  }
-
-  setOnStatisticsClickHangler(handler) {
-    this._onStatisticsClickHanglers.push(handler);
-  }
-
-  setOnFilterClickHangler(handler) {
-    this._onFilterClickHandlers.push(handler);
   }
 }

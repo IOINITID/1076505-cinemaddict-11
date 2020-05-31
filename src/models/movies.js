@@ -1,34 +1,14 @@
+import {FilterType, StatisticsFilter} from "../const";
 import {getMoviesByFilter} from "../utils/filter";
-import {FilterType, RatingLevel} from "../const";
-
-const StatisticsFilter = {
-  ALL_TIME: `all-time`,
-  TODAY: `today`,
-  WEEK: `week`,
-  MONTH: `month`,
-  YEAR: `year`,
-};
 
 const MINUTES_PER_HOUR = 60;
 
 const sortData = (list) => {
-  const sortedData = [];
-
-  for (const key in list) {
-    if (Object.prototype.hasOwnProperty.call(list, key)) {
-      sortedData.push([key, list[key]]);
-    }
-  }
-
-  sortedData.sort((a, b) => b[1] - a[1]);
-
   const resultData = {};
 
-  for (const id in sortedData) {
-    if (Object.prototype.hasOwnProperty.call(sortedData, id)) {
-      resultData[sortedData[id][0]] = sortedData[id][1];
-    }
-  }
+  Object.entries(list).sort((a, b) => b[1] - a[1]).forEach((item) => {
+    resultData[item[0]] = item[1];
+  });
 
   return resultData;
 };
@@ -103,21 +83,6 @@ export default class Movies {
     return moviesWatched.filter((item) => new Date(item.watchingDate) > date);
   }
 
-  getRating() {
-    const moviesQuantity = this._moviesData.filter((movieData) => movieData.watched === true).length;
-
-    switch (true) {
-      case moviesQuantity > 0 && moviesQuantity <= 10:
-        return RatingLevel.NOVICE;
-      case moviesQuantity > 10 && moviesQuantity <= 20:
-        return RatingLevel.FAN;
-      case moviesQuantity >= 21:
-        return RatingLevel.MOVIEBUFF;
-      default:
-        return ``;
-    }
-  }
-
   getGenresStatistics(filter) {
     const genres = {};
 
@@ -147,7 +112,7 @@ export default class Movies {
       return total + movie.runtime;
     }, 0);
 
-    const hours = parseInt(totalDuration / MINUTES_PER_HOUR, 10);
+    const hours = Math.floor(totalDuration / MINUTES_PER_HOUR);
 
     return {
       hours,

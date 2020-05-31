@@ -1,12 +1,18 @@
+import API from "../api/index";
+import Provider from "../api/provider";
+import Store from "../api/store";
+import CommentsModel from "../models/comments";
+import Movie from "../models/movie";
 import MovieComponent from "../components/movie";
 import MovieDetailsComponent from "../components/movie-details";
-import CommentsModel from "../models/comments";
 import {render, remove, replace, RenderPosition} from "../utils/render";
-import API from "../api";
-import Movie from "../models/movie";
 
 const AUTHORIZATION = `Basic ekfjdcndjfkrltj3`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
@@ -27,6 +33,8 @@ export default class MovieController {
 
     this._commentsModel = new CommentsModel();
     this._api = new API(AUTHORIZATION, END_POINT);
+    this._store = new Store(STORE_NAME, window.localStorage);
+    this._apiWithProvider = new Provider(this._api, this._store);
 
     this._movieData = null;
     this._commentData = null;
@@ -51,25 +59,25 @@ export default class MovieController {
   render(movieData) {
     this._movieData = movieData;
 
-    this._api.getComments(this._movieData.id)
-    .then((commentsData) => {
-      this._commentsModel.setComments(commentsData);
-      this._commentData = this._commentsModel.getComments();
+    this._apiWithProvider.getComments(this._movieData.id)
+      .then((commentsData) => {
+        this._commentsModel.setComments(commentsData);
+        this._commentData = this._commentsModel.getComments();
 
-      this._movieDetailsComponent = new MovieDetailsComponent(this._movieData, this._commentData);
+        this._movieDetailsComponent = new MovieDetailsComponent(this._movieData, this._commentData);
 
-      this._movieDetailsComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
-      this._movieDetailsComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
-      this._movieDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
-      this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
-      this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
-      this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
+        this._movieDetailsComponent.setAddToWatchlistButtonClickHandler(this._onInWatchlistDataChange);
+        this._movieDetailsComponent.setMarkAsWatchedButtonClickHandler(this._onWatchedDataChange);
+        this._movieDetailsComponent.setMarkAsFavoriteButtonClickHandler(this._onFavoriteDataChange);
+        this._movieDetailsComponent.setPopupCloseButtonClick(this._onPopupCloseButtonClick);
+        this._movieDetailsComponent.setCommentDeleteHandler(this._onCommentDelete);
+        this._movieDetailsComponent.setSubmitHandler(this._onCommentSubmit);
 
-      if (oldMovie && oldMovieDetails) {
-        replace(this._movieComponent, oldMovie);
-        replace(this._movieDetailsComponent, oldMovieDetails);
-      }
-    });
+        if (oldMovie && oldMovieDetails) {
+          replace(this._movieComponent, oldMovie);
+          replace(this._movieDetailsComponent, oldMovieDetails);
+        }
+      });
 
     const oldMovie = this._movieComponent;
     const oldMovieDetails = this._movieDetailsComponent;
@@ -99,11 +107,25 @@ export default class MovieController {
   }
 
   shake() {
-    this._movieDetailsComponent.getElement().querySelector(`.film-details__new-comment`).style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    const newCommentElement = this._movieDetailsComponent.getElement().querySelector(`.film-details__new-comment`);
+
+    newCommentElement.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
     setTimeout(() => {
-      this._movieDetailsComponent.getElement().querySelector(`.film-details__new-comment`).style.animation = ``;
+      newCommentElement.style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._removeMovieDetails();
+    }
+  }
+
+  destroy() {
+    remove(this._movieDetailsComponent);
+    remove(this._movieComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _onDataChangeHandler() {
@@ -121,7 +143,7 @@ export default class MovieController {
     const emojiList = this._movieDetailsComponent.getElement().querySelectorAll(`.film-details__emoji-item`);
     const textField = this._movieDetailsComponent.getElement().querySelector(`.film-details__comment-input`);
 
-    this._api.addComment(this._movieData, commentFormData)
+    this._apiWithProvider.addComment(this._movieData, commentFormData)
       .then(() => {
         emojiList.forEach((item) => {
           item.disabled = true;
@@ -140,32 +162,15 @@ export default class MovieController {
       });
   }
 
-  _onCommentDelete(id) {
-    const deleteButton = this._movieDetailsComponent.getElement().querySelectorAll(`.film-details__comment-delete`);
-
-    deleteButton.forEach((button) => {
-      button.addEventListener(`click`, (evt) => {
-        if (evt.target === button) {
-          button.textContent = `Deleting...`;
-          button.disabled = true;
-        }
+  _onCommentDelete(id, errorCallback) {
+    this._apiWithProvider.deleteComment(id)
+      .then(() => {
+        this._commentsModel.deleteComment(id);
+      })
+      .catch(() => {
+        errorCallback();
+        this.shake();
       });
-    });
-
-    this._api.deleteComment(id)
-    .then(() => {
-      this._commentsModel.deleteComment(id);
-    })
-    .catch(() => {
-      deleteButton.forEach((button) => {
-        button.addEventListener(`click`, (evt) => {
-          if (evt.target === button) {
-            button.disabled = false;
-          }
-        });
-      });
-      this.shake();
-    });
   }
 
   _onInWatchlistDataChange(evt) {
@@ -187,18 +192,6 @@ export default class MovieController {
     const movieData = Movie.clone(this._movieData);
     movieData.favorite = !movieData.favorite;
     this._onDataChange(this, this._movieData, movieData);
-  }
-
-  setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._removeMovieDetails();
-    }
-  }
-
-  destroy() {
-    remove(this._movieDetailsComponent);
-    remove(this._movieComponent);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _removeMovieDetails() {
