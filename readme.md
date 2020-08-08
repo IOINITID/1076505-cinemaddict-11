@@ -2,7 +2,7 @@
 
 ------------
 
-Главная страница сайта: 🖥️ https://ioinitid.github.io/cinemaaddict/index.html
+Главная страница сайта: 🖥️ https://ioinitid.github.io/cinemaddict/index.html
 
 ------------
 
