@@ -1,4 +1,4 @@
-Название: **«Киноман»** [![Build Status](https://travis-ci.com/IOINITID/1076505-cinemaddict-11.svg?branch=master)](https://travis-ci.com/IOINITID/1076505-cinemaddict-11)
+Название: **«Киноман»** [![Build Status](https://travis-ci.com/IOINITID/cinemaddict.svg?branch=master)](https://travis-ci.com/IOINITID/cinemaddict)
 
 ------------
 
